@@ -1,5 +1,5 @@
 import pygame
-import helper.py as helper
+#import helper.py as helper
 from random import randint
 from button import button
 
@@ -11,7 +11,7 @@ def menu:
 
             MENU_MOUSE_POS = pygame.mouse.get_pos()
 
-            MENU_TEXT = get_font(100).render("MAIN MENU", True, "#b68f40")
+            MENU_TEXT = get_font(100).render("FROG GAME", True, "#b68f40")
             MENU_RECT = MENU_TEXT.get_rect(center=(640, 100))
 
             PLAY_BUTTON = Button(image=pygame.image.load("assets/Play Rect.png"), pos=(640, 250),

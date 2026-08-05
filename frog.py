@@ -17,13 +17,17 @@ JUMP_HEIGHT = 20
 Y_VELOCITY = JUMP_HEIGHT
 
 Sitting_f = pygame.image.load("media/frog_sitting.png").convert_alpha()
-Frog_s = pygame.transform.scale(Sitting_f, (230,200))
+w_1 = Sitting_f.get_width()
+h_1 = Sitting_f.get_height()
+Frog_s = pygame.transform.scale(Sitting_f, (w_1 * 0.55, h_1 * 0.55))
 Jumping_f = pygame.image.load("media/frog_jumping.png").convert_alpha()
-Frog_j = pygame.transform.scale(Jumping_f, (300,360))
+w_2 = Jumping_f.get_width()
+h_2 = Jumping_f.get_height()
+Frog_j = pygame.transform.scale(Jumping_f, (w_2 * 0.9, h_2 * 0.9))
 
 Background_f = ("blue")
 
-frog_jump = Frog_s.get_rect(center=(X_POSITION, Y_POSITION))
+frog_jump = Frog_s.get_rect(center=(X_POSITION, Y_POSITION + 10))
 
 while True:
     for event in pygame.event.get():
@@ -48,7 +52,7 @@ while True:
         if Y_VELOCITY < -JUMP_HEIGHT:
             jumping = False
             Y_VELOCITY = JUMP_HEIGHT
-        frog_jump = Frog_s.get_rect(center=(X_POSITION - 45, Y_POSITION))
+        frog_jump = Frog_s.get_rect(center=(X_POSITION - 39 , Y_POSITION))
         Screen.blit(Frog_j, frog_jump)
     else:
         frog_jump = Frog_s.get_rect(center=(X_POSITION, Y_POSITION))

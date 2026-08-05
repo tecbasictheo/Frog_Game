@@ -56,3 +56,5 @@ while flag:
 
 pygame.quit()
 exit(0)
+# if condtion is meet in boundery movw with petal if jump break condition
+#

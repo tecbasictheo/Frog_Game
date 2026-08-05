@@ -1,8 +1,18 @@
 import pygame
 #import helper.py as helper
 from random import randint
-from button import button
+from buttons import button
 
+SCREEN_WIDTH = 1200
+SCREEN_HEIGHT = 300
+BACKGROUND_COLOR = ("light blue")
+pegasus_group = pygame.sprite.Group()
+
+pygame.init()
+
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+'''
 # making the mainscreen
 def menu:
     def main_menu():
@@ -74,3 +84,4 @@ class Frog:
                 self.frog.move(0, -1)
             if event.type == KEYDOWN and event.key == K_DOWN:
                 self.frog.move(0, 1)
+'''

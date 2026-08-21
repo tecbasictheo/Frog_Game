@@ -11,13 +11,13 @@ Y_VELOCITY = JUMP_HEIGHT
 frog_angle = 0
 JUMP_Speed = 5
 
-
+'''
 Clock = pygame.time.Clock()
 Screen = pygame.display.set_mode((800, 800))
 pygame.display.set_caption("Frog_jumping")
 
 BACKGROUND_COLOR = ("light blue")
-Background_f = BACKGROUND_COLOR
+Background_f = BACKGROUND_COLOR '''
 X_POSITION, Y_POSITION = 400, 750
 
 Sitting_f = pygame.image.load("media/frog_sitting.png").convert_alpha()
@@ -30,7 +30,7 @@ h_2 = Jumping_f.get_height()
 Frog_j = pygame.transform.scale(Jumping_f, (w_2 * 0.45, h_2 * 0.45))
 frog_jump = Frog_s.get_rect(center=(X_POSITION, Y_POSITION))
 rotated_frog = pygame.transform.rotate(Frog_j, frog_angle)
-
+'''
 while True:
 
     Clock.tick(60)
@@ -42,9 +42,9 @@ while True:
             sys.exit()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                if not jumping:  # Only jump if not already jumping
+                if not jumping:
                         jumping = True
-                        Y_VELOCITY = JUMP_HEIGHT  # Reset jump velocity
+                        Y_VELOCITY = JUMP_HEIGHT
     keys_pressed = pygame.key.get_pressed()
     if keys_pressed[pygame.K_LEFT]:
         frog_angle += 2
@@ -57,14 +57,10 @@ while True:
         dy = math.sin(angle_rad) * JUMP_Speed
         X_POSITION += dx
         Y_POSITION += dy
-        #Y_POSITION -= Y_VELOCITY
         Y_VELOCITY -= Y_GRAVITY
         if Y_VELOCITY < -JUMP_HEIGHT:
             jumping = False
             Y_VELOCITY = JUMP_HEIGHT
-        #Y_POSITION -= 9  # Move forward 3 pixels per frame
-        #frog_jump = Frog_j.get_rect(center=(X_POSITION, Y_POSITION))#Frog_s.get_rect(center=(X_POSITION - 39 , Y_POSITION))
-        #Screen.blit(Frog_j, frog_jump)
         frog_jump = Frog_j.get_rect(center=(X_POSITION, Y_POSITION))
         rotated_frog = pygame.transform.rotate(Frog_j, frog_angle)
         Screen.blit(rotated_frog, frog_jump)
@@ -78,3 +74,4 @@ while True:
     pygame.display.update()
 
 pygame.quit()
+'''

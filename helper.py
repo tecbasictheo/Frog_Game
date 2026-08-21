@@ -4,9 +4,9 @@
 
 import random
 import pygame
-
-SCREEN_WIDTH = 1200
-SCREEN_HEIGHT = 300
+'''
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 800
 BACKGROUND_COLOR = ("light blue")
 petal_group = pygame.sprite.Group()
 
@@ -14,9 +14,11 @@ pygame.init()
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('Petals moving')
+'''
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 800
 
-
-class Petal(pygame.sprite.Sprite):
+class Petal1(pygame.sprite.Sprite):
 
     def __init__(self):
         super().__init__()
@@ -34,10 +36,10 @@ class Petal(pygame.sprite.Sprite):
             self.rect.x = -200
 
 
-
+'''
 clock = pygame.time.Clock()
 for i in range(2):
-    new_petal = Petal()
+    new_petal = Petal1()
     petal_group.add(new_petal)
 
 flag = True
@@ -58,3 +60,4 @@ pygame.quit()
 exit(0)
 # if condtion is meet in boundery movw with petal if jump break condition
 #
+'''

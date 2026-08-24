@@ -7,10 +7,7 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 from helper import *
 from frog import *
-print("Helper imported!")
-
 from random import randint
-
 
 run = True
 jumping = False
@@ -27,9 +24,10 @@ for i in range(2):
 while run:
     clock.tick(60)
 
+    Screen.fill(BACKGROUND_COLOR)
+
 # call menu
 # -> which calls the other game
-    #quit the game
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
@@ -48,7 +46,7 @@ while run:
     petal_group.update()
     petal_group.draw(Screen)
 
-    Screen.fill(BACKGROUND_COLOR)
+
 
     if jumping:
         angle_rad = math.radians(270 - frog_angle)  # convert angle to radians

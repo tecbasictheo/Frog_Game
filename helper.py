@@ -29,6 +29,7 @@ class Petal1(pygame.sprite.Sprite):
         self.rect.x = random.randrange(SCREEN_WIDTH - 50)
         self.rect.y = 100
         self.speed = 2 #random.randint(1, 2)
+        self.mask = pygame.mask.from_surface(self.image)
 
     def update(self):
         self.rect.x += self.speed

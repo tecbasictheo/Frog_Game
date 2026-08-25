@@ -1,3 +1,5 @@
+from symtable import Class
+
 import pygame
 import sys
 import math
@@ -30,6 +32,14 @@ h_2 = Jumping_f.get_height()
 Frog_j = pygame.transform.scale(Jumping_f, (w_2 * 0.45, h_2 * 0.45))
 frog_jump = Frog_s.get_rect(center=(X_POSITION, Y_POSITION))
 rotated_frog = pygame.transform.rotate(Frog_j, frog_angle)
+
+#class for sitting forg for colisiom check
+class Frog(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = Frog_s
+        self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
 '''
 while True:
 

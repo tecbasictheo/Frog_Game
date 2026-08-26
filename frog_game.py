@@ -12,7 +12,9 @@ from frog import *
 
 run = True
 jumping = False
+outside_screen = False # was maybe diffrernt scrreens for diffrent dying but does not worrk
 game_over = False
+fall_water = False
 clock = pygame.time.Clock()
 pygame.display.set_caption("Frog Game")
 BACKGROUND_COLOR = "light blue"
@@ -40,6 +42,7 @@ def show_game_over_screen():
     restart_text = font.render("Restart", True, (0, 0, 0))
     restart_text_rect = restart_text.get_rect(center=restart_button.center)
     Screen.blit(restart_text, restart_text_rect)
+
     return restart_button
 
 def restart_game():
@@ -110,11 +113,20 @@ while run:
         if Y_POSITION > (SCREEN_HEIGHT)  - BOTTOM_BOUNDARY:
             Y_POSITION = ((SCREEN_HEIGHT) - BOTTOM_BOUNDARY)
 
+        '''
+               #mask collision
+               frog_group.update()
+               if pygame.sprite.spritecollide(frog_group, petal_group, False):
+                   if pygame.sprite.spritecollide(frog_group, petal_group, False, pygame.sprite.collide_mask):
+                      if Frog_s petal_group_mask.rect
+               #stay in the petal : boundaries'''
+        # fall water defineren
+
         #for level_one():
 
         # if outside of map end game
     elif game_over == True:
-            #run = False  # maybe das is falsch aber denke um den game loop neu zustarten
+        #run = False  # maybe das is falsch aber denke um den game loop neu zustarten
             restart_button = show_game_over_screen()
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -122,20 +134,21 @@ while run:
                         restart_game()
                         game_over = False
 
+    '''if water end game
+    elif fall_water == True:  # if Frog_s not in ... :  #petal boundary
+        if game_over == True:
+        #run = False  # maybe das is falsch aber denke um den game loop neu zustarten
+            restart_button = show_game_over_screen()
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if restart_button.collidepoint(event.pos):
+                        restart_game()
+                        game_over = False
+    '''
     pygame.display.flip()
     pygame.display.update()
-    '''
-        #mask collision
-        frog_group.update()
-        if pygame.sprite.spritecollide(frog_group, petal_group, False):
-            if pygame.sprite.spritecollide(frog_group, petal_group, False, pygame.sprite.collide_mask):
-               if Frog_s petal_group_mask.rect
-        #stay in the petal : boundaries'''
-    # call you died screen with buttons to move menu or try again
-    # if water end game
-    # if Frog_s not in ... :  #petal boundary
-    # quit = True
-    # call you died screen with buttons to move menu or try again
+
+
 
 pygame.quit()
 exit()

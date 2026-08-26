@@ -38,7 +38,6 @@ class Petal(pygame.sprite.Sprite):
         if self.rect.x > SCREEN_WIDTH:
             self.rect.x = -200
 
-
 def show_game_over_screen():
     Screen.fill((255,255,255))
     font = pygame.font.Font(None, 40)  # Large font
@@ -60,7 +59,32 @@ def restart_game():
     run = True
 
 
+class PetalSpawner:
+    def __init__(self):
+        self.petals = []
+        self.max_count = 6
+        self.count = 0
+        self.spawn_delay = 1.5
+        self.timer = 0
 
+    def update(self, delta_time):
+        for petal in self.petals:
+            petal.update(delta_time)
+        if self.count < self.max_count:
+            self.timer += delta_time
+            if self.timer > self.spawn_delay:
+                petal = Petal((-32, 250), 1, 40)
+                other_turtle = Petal((SCREEN_WIDTH, 210), -1, 40)
+                self.petals.append(other_turtle)
+                self.petals.append(petal)
+                self.count += 1
+                self.timer = 0
+                if self.count == self.max_count // 2:
+                    self.spawn_delay = 2
+
+    def draw(self):
+        for petal in self.petals:
+            petal.draw()
 '''
 clock = pygame.time.Clock()
 for i in range(2):

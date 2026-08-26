@@ -1,5 +1,4 @@
 import pygame
-from pygame.examples.testsprite import screen_dims
 
 pygame.init()
 SCREEN_WIDTH = 800
@@ -9,89 +8,129 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 from helper import *
 from frog import *
-from random import randint
+
 run = True
 jumping = False
+game_over = False
 clock = pygame.time.Clock()
 pygame.display.set_caption("Frog Game")
-BACKGROUND_COLOR = ("light blue")
+BACKGROUND_COLOR = "light blue"
+Initial_X = SCREEN_WIDTH // 2
+Initial_Y = 750
+
 
 frog_group = pygame.sprite.Group()
 petal_group = pygame.sprite.Group()
-
 for i in range(2):
-    new_petal = Petal1()
+    new_petal = Petal()
     petal_group.add(new_petal)
 
-#main game loop -> how to get everything in here
+#Importet from helper
+def show_game_over_screen():
+    Screen.fill((255,255,255))
+    font = pygame.font.Font(None, 72)  # Large font
+    text = font.render("You died", True, (255, 0, 0))  # Red text
+    text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+    Screen.blit(text, text_rect)
+
+    #restart button, function testing:
+    restart_button = pygame.Rect(SCREEN_WIDTH // 2 - 50, SCREEN_HEIGHT // 2 + 50, 100, 50)
+    pygame.draw.rect(screen, (0, 255, 0), restart_button)  # Green button
+    restart_text = font.render("Restart", True, (0, 0, 0))
+    restart_text_rect = restart_text.get_rect(center=restart_button.center)
+    Screen.blit(restart_text, restart_text_rect)
+    return restart_button
+
+def restart_game():
+    global X_POSITION, Y_POSITION, game_over, run
+    X_POSITION = Initial_X
+    Y_POSITION = Initial_Y
+    game_over = False
+    #run = True
+
+# main game loop -> how to get everything in here
 while run:
     clock.tick(60)
 
-    Screen.fill(BACKGROUND_COLOR)
-
-# call menu
-# -> which calls the other game
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 if not jumping:
-                        jumping = True
-                        Y_VELOCITY = JUMP_HEIGHT
-    keys_pressed = pygame.key.get_pressed()
-    if keys_pressed[pygame.K_LEFT]:
-        frog_angle += 2
-    if keys_pressed[pygame.K_RIGHT]:
-        frog_angle -= 2
+                    jumping = True
+                    Y_VELOCITY = JUMP_HEIGHT
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if restart_button.collidepoint(event.pos):
+                restart_game()
+                game_over = False
 
-    petal_group.update()
-    petal_group.draw(Screen)
-    frog_group.draw(Screen)
+    if not game_over:
 
-    if jumping:
-        angle_rad = math.radians(270 - frog_angle)  # convert angle to radians
-        dx = math.cos(angle_rad) * JUMP_Speed
-        dy = math.sin(angle_rad) * JUMP_Speed
-        X_POSITION += dx
-        Y_POSITION += dy
-        Y_VELOCITY -= Y_GRAVITY
-        if Y_VELOCITY < -JUMP_HEIGHT:
-            jumping = False
-            Y_VELOCITY = JUMP_HEIGHT
-        frog_jump = Frog_j.get_rect(center=(X_POSITION, Y_POSITION))
-        rotated_frog = pygame.transform.rotate(Frog_j, frog_angle)
-        Screen.blit(rotated_frog, frog_jump)
-    else:
-        frog_jump = Frog_s.get_rect(center=(X_POSITION, Y_POSITION))
-        rotated_frog = pygame.transform.rotate(Frog_s, frog_angle)
-        frog_rect = rotated_frog.get_rect(center=(X_POSITION, Y_POSITION))
-        Screen.blit(rotated_frog, frog_rect)
+        Screen.fill(BACKGROUND_COLOR)
+
+        # call menu
+        # -> which calls the other game
+
+        keys_pressed = pygame.key.get_pressed()
+        if keys_pressed[pygame.K_LEFT]:
+            frog_angle += 2
+        if keys_pressed[pygame.K_RIGHT]:
+            frog_angle -= 2
+
+        if SCREEN_WIDTH < X_POSITION or X_POSITION < 0:
+            game_over = True
+
+        petal_group.update()
+        petal_group.draw(Screen)
+        frog_group.update()
+        frog_group.draw(Screen)
+
+        if jumping:
+            angle_rad = math.radians(270 - frog_angle)  # convert angle to radians
+            dx = math.cos(angle_rad) * JUMP_Speed
+            dy = math.sin(angle_rad) * JUMP_Speed
+            X_POSITION += dx
+            Y_POSITION += dy
+            Y_VELOCITY -= Y_GRAVITY
+            if Y_VELOCITY < -JUMP_HEIGHT:
+                jumping = False
+                Y_VELOCITY = JUMP_HEIGHT
+            frog_jump = Frog_j.get_rect(center=(X_POSITION, Y_POSITION))
+            rotated_frog = pygame.transform.rotate(Frog_j, frog_angle)
+            Screen.blit(rotated_frog, frog_jump)
+        else:
+            frog_jump = Frog_s.get_rect(center=(X_POSITION, Y_POSITION))
+            rotated_frog = pygame.transform.rotate(Frog_s, frog_angle)
+            frog_rect = rotated_frog.get_rect(center=(X_POSITION, Y_POSITION))
+            Screen.blit(rotated_frog, frog_rect)
+
+        #for level_one():
+
+        # if outside of map end game
+    elif game_over == True:
+            #run = False  # maybe das is falsch aber denke um den game loop neu zustarten
+            restart_button = show_game_over_screen()
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if restart_button.collidepoint(event.pos):
+                        restart_game()
+                        game_over = False
 
     pygame.display.flip()
     pygame.display.update()
-
-    # if outside of map end game
-    if X_POSITION > Screen: # why does it not work
-        quit = True
-    elif Y_POSITION > Screen:
-        quit = True
-
-'''
-    #mask collison
-    frog_group.update()
-    if pygame.sprite.spritecollide(frog_group, petal_group, False):
-        if pygame.sprite.spritecollide(frog_group, petal_group, False, pygame.sprite.collide_mask):
-           if Frog_s petal_group_mask.rect
-    #stay in the petal : boundaries'''
-    # call you died screen with butttons to move menu or or try again
+    '''
+        #mask collision
+        frog_group.update()
+        if pygame.sprite.spritecollide(frog_group, petal_group, False):
+            if pygame.sprite.spritecollide(frog_group, petal_group, False, pygame.sprite.collide_mask):
+               if Frog_s petal_group_mask.rect
+        #stay in the petal : boundaries'''
+    # call you died screen with buttons to move menu or try again
     # if water end game
-   #if Frog_s not in ... :  #petal boundary
-        #quit = True
-        # call you died screen with butttons to move menu or or try again
-
-
+    # if Frog_s not in ... :  #petal boundary
+    # quit = True
+    # call you died screen with buttons to move menu or try again
 
 pygame.quit()
 exit()

@@ -4,6 +4,8 @@
 
 import random
 import pygame
+#from frog_game import Screen
+
 '''
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 800
@@ -18,7 +20,7 @@ pygame.display.set_caption('Petals moving')
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 800
 
-class Petal1(pygame.sprite.Sprite):
+class Petal(pygame.sprite.Sprite):
 
     def __init__(self):
         super().__init__()
@@ -35,6 +37,28 @@ class Petal1(pygame.sprite.Sprite):
         self.rect.x += self.speed
         if self.rect.x > SCREEN_WIDTH:
             self.rect.x = -200
+
+
+def show_game_over_screen():
+    Screen.fill((255,255,255))
+    font = pygame.font.Font(None, 40)  # Large font
+    text = font.render("You died", True, (255, 0, 0))  # Red text
+    text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+    Screen.blit(text, text_rect)
+
+    #restart button, function testing:
+    restart_button = pygame.Rect(SCREEN_WIDTH // 2 - 50, SCREEN_HEIGHT // 2 + 50, 100, 50)
+    pygame.draw.rect(Screen, (0, 255, 0), restart_button)  # Green button
+    restart_text = font.render("Restart", True, (0, 0, 0))
+    restart_text_rect = restart_text.get_rect(center=restart_button.center)
+    Screen.blit(restart_text, restart_text_rect)
+
+    return restart_button
+
+def restart_game():
+    global X_POSITION, Y_POSITION
+    run = True
+
 
 
 '''

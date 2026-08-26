@@ -3,6 +3,7 @@ import pygame
 pygame.init()
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 800
+BOTTOM_BOUNDARY = 50
 Screen = pygame.display.set_mode((800, 800))
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
@@ -104,6 +105,10 @@ while run:
             rotated_frog = pygame.transform.rotate(Frog_s, frog_angle)
             frog_rect = rotated_frog.get_rect(center=(X_POSITION, Y_POSITION))
             Screen.blit(rotated_frog, frog_rect)
+
+        BOTTOM_BOUNDARY = 50
+        if Y_POSITION > (SCREEN_HEIGHT)  - BOTTOM_BOUNDARY:
+            Y_POSITION = ((SCREEN_HEIGHT) - BOTTOM_BOUNDARY)
 
         #for level_one():
 

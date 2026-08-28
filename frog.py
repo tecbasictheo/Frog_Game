@@ -14,8 +14,7 @@ Y_GRAVITY = 1
 JUMP_HEIGHT = 12 # abstand petals 10
 Y_VELOCITY = JUMP_HEIGHT
 frog_angle = 0
-JUMP_Speed = 5
-#direction = None
+JUMP_Speed = 5.5
 direction = frog_angle
 
 '''
@@ -25,9 +24,9 @@ pygame.display.set_caption("Frog_jumping")
 
 BACKGROUND_COLOR = ("light blue")
 Background_f = BACKGROUND_COLOR '''
-X_POSITION, Y_POSITION = 400, 750
+X_POSITION, Y_POSITION = 400, 825
 Initial_X = SCREEN_WIDTH // 2
-Initial_Y = 750
+Initial_Y = 825
 
 Sitting_f = pygame.image.load("media/frog_sitting.png").convert_alpha()
 w_1 = Sitting_f.get_width()

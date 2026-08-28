@@ -9,6 +9,8 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 from helper import *
 from frog import *
+from enum import Enum
+
 
 run = True
 jumping = False
@@ -23,10 +25,17 @@ Initial_Y = 750
 
 
 frog_group = pygame.sprite.Group()
+frog = Frog(Initial_X, Initial_Y)
 petal_group = pygame.sprite.Group()
 for i in range(2):
     new_petal = Petal()
     petal_group.add(new_petal)
+
+class Direction(Enum):
+    UP = 0
+    DOWN = 180
+    LEFT = 270
+    RIGHT = 90
 
 #Importet from helper
 def show_game_over_screen():
@@ -42,15 +51,15 @@ def show_game_over_screen():
     restart_text = font.render("Restart", True, (0, 0, 0))
     restart_text_rect = restart_text.get_rect(center=restart_button.center)
     Screen.blit(restart_text, restart_text_rect)
-
     return restart_button
 
 def restart_game():
-    global X_POSITION, Y_POSITION, game_over, run
+    global X_POSITION, Y_POSITION, game_over, run, jumping, frog_angle
     X_POSITION = Initial_X
     Y_POSITION = Initial_Y
+    jumping = False
+    frog_angle = Direction.UP.value
     game_over = False
-    #run = True
 
 # main game loop -> how to get everything in here
 while run:
@@ -68,9 +77,7 @@ while run:
             if restart_button.collidepoint(event.pos):
                 restart_game()
                 game_over = False
-
     if not game_over:
-
         Screen.fill(BACKGROUND_COLOR)
 
         # call menu
@@ -126,7 +133,6 @@ while run:
 
         # if outside of map end game
     elif game_over == True:
-        #run = False  # maybe das is falsch aber denke um den game loop neu zustarten
             restart_button = show_game_over_screen()
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:

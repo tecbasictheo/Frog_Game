@@ -6,17 +6,6 @@ import random
 import pygame
 #from frog_game import Screen
 
-'''
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 800
-BACKGROUND_COLOR = ("light blue")
-petal_group = pygame.sprite.Group()
-
-pygame.init()
-
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption('Petals moving')
-'''
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 800
 
@@ -85,28 +74,3 @@ class PetalSpawner:
     def draw(self):
         for petal in self.petals:
             petal.draw()
-'''
-clock = pygame.time.Clock()
-for i in range(2):
-    new_petal = Petal1()
-    petal_group.add(new_petal)
-
-flag = True
-while flag:
-    clock.tick(90)
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            flag = False
-
-    petal_group.update()
-    screen.fill(BACKGROUND_COLOR)
-
-    petal_group.draw(screen)
-    pygame.display.flip()
-
-pygame.quit()
-exit(0)
-# if condtion is meet in boundery movw with petal if jump break condition
-#
-'''

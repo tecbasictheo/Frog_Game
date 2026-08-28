@@ -1,6 +1,9 @@
 from symtable import Class
 
 import pygame
+
+#from frog_game import Initial_Y, Initial_X
+from helper import *
 import sys
 import math
 
@@ -12,6 +15,8 @@ JUMP_HEIGHT = 12 # abstand petals 10
 Y_VELOCITY = JUMP_HEIGHT
 frog_angle = 0
 JUMP_Speed = 5
+#direction = None
+direction = frog_angle
 
 '''
 Clock = pygame.time.Clock()
@@ -21,6 +26,8 @@ pygame.display.set_caption("Frog_jumping")
 BACKGROUND_COLOR = ("light blue")
 Background_f = BACKGROUND_COLOR '''
 X_POSITION, Y_POSITION = 400, 750
+Initial_X = SCREEN_WIDTH // 2
+Initial_Y = 750
 
 Sitting_f = pygame.image.load("media/frog_sitting.png").convert_alpha()
 w_1 = Sitting_f.get_width()
@@ -39,9 +46,21 @@ class Frog(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = Frog_s
         self.rect = self.image.get_rect()
+        self.on_petal = False
         self.mask = pygame.mask.from_surface(self.image)
-'''
-while True:
+        #self.dead = False
+        self.dir = direction
+
+    def handle_petal_collisions(self, petals):
+        for petal in petals:
+            if petal.mask.colliderect(self.rect) and not self.dead:
+                self.on_petal = True
+                self.rect.x = Petal.mask
+                self.rect.y = Petal.mask
+                break
+
+
+'''      while True:
 
     Clock.tick(60)
     Screen.fill(Background_f)

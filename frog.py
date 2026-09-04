@@ -40,14 +40,15 @@ class Frog(pygame.sprite.Sprite):
         self.dir = direction
         self.angle = frog_angle
         self.screen = None
-        self.x_pos = float(x)  # Store x position as float for precision
-        self.y_pos = float(y)  # Store y position as float
-        self.rect.center = (x, y)
+        self.x_pos = float(x)
+        self.y_pos = float(y)
         self.hitbox_size = (30, 30)
         self.hitbox_surface = pygame.Surface(self.hitbox_size, pygame.SRCALPHA)
         pygame.draw.ellipse(self.hitbox_surface, (255, 255, 255), (0, 0, 30, 30))
         self.hitbox_offset = (0, 0)
         self.speed = 5
+        self.offset_x = 0  # Initialize these here
+        self.offset_y = 0  # Initialize these here
 
         # Store position
         self.x_pos = float(x)
@@ -67,13 +68,6 @@ class Frog(pygame.sprite.Sprite):
         pygame.draw.ellipse(self.sitting_hitbox_surface, (255, 255, 255),
                             (0, 0, *self.sitting_hitbox_size))
 
-        # Create hitbox for JUMPING frog
-        self.jumping_hitbox_size = (self.jumping_image.get_width() * 0.5,
-                                    self.jumping_image.get_height() * 0.5)
-        self.jumping_hitbox_surface = pygame.Surface(self.jumping_hitbox_size, pygame.SRCALPHA)
-        pygame.draw.ellipse(self.jumping_hitbox_surface, (255, 255, 255),
-                            (0, 0, *self.jumping_hitbox_size))
-
         # Start with sitting hitbox
         self.current_hitbox_surface = self.sitting_hitbox_surface
         self.mask = pygame.mask.from_surface(self.current_hitbox_surface)
@@ -84,17 +78,10 @@ class Frog(pygame.sprite.Sprite):
             (self.sitting_image.get_height() - self.sitting_hitbox_size[1]) / 2
         )
 
-        self.jumping_hitbox_offset = (
-            (self.jumping_image.get_width() - self.jumping_hitbox_size[0]) / 2,
-            (self.jumping_image.get_height() - self.jumping_hitbox_size[1]) / 2
-        )
-
 
     def update_image(self):
         if self.jumping:
             self.image = self.jumping_image
-            self.current_hitbox_surface = self.jumping_hitbox_surface
-            self.hitbox_offset = self.jumping_hitbox_offset
         else:
             self.image = self.sitting_image
             self.current_hitbox_surface = self.sitting_hitbox_surface

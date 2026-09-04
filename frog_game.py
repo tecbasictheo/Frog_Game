@@ -270,63 +270,34 @@ def level_completion():
     return False
 
 
-def handle_landing(frog, petal_group):
-    if frog.on_petal and frog.current_petal:
-        if not frog.rect.colliderect(frog.current_petal.rect):
-            frog.on_petal = False
-            frog.current_petal = None
-        else:
-            move_x = frog.current_petal.speed * frog.current_petal.direction
-            frog.rect.x += move_x
-            frog.x_pos = frog.rect.centerx
-            frog.y_pos = frog.rect.centery
-    else:
-        for petal in petal_group:
-            if frog.rect.colliderect(petal.rect):  # Use rect collision
-                frog.on_petal = True
-                frog.current_petal = petal
-                frog.rect.bottom = petal.rect.top
-                frog.rect.centerx = petal.rect.centerx
-                frog.x_pos = frog.rect.centerx
-                frog.y_pos = frog.rect.centery
-                print("Frog landed on petal!")
-                break
+def handle_landing(frog, petal_group, lane_config=None):
+        # Find the petal the frog collided with
+        collided_petal = pygame.sprite.spritecollideany(frog, petal_group, pygame.sprite.collide_mask)
 
-        '''print(f"Frog on petal: {frog.on_petal}, current_petal: {frog.current_petal}")
+        if collided_petal and not frog.on_petal:  # Only land once per collision
+            # Set riding state
+            frog.on_petal = True
+            frog.current_petal = collided_petal
 
-        if frog.on_petal and frog.current_petal:
-            print(f"Checking if still on petal: {frog.current_petal}")
-            # Check if still on the same petal
-            if not pygame.sprite.collide_mask(frog, frog.current_petal):
-                print("Frog fell off petal!")
-                frog.on_petal = False
-                frog.current_petal = None
-            else:
-                print("Frog still on petal - moving with it!")
-                # Move with the petal
-                move_x = frog.current_petal.speed * frog.current_petal.direction
-                print(f"Moving frog by {move_x} pixels")
-                frog.rect.x += move_x
-                # Update position variables to match
-                frog.x_pos = frog.rect.centerx
-                frog.y_pos = frog.rect.centery
-        else:
-            print("Checking for new petal collisions...")
-            # Check for collision with any petal
-            for petal in petal_group:
-                collision = pygame.sprite.collide_mask(frog, petal)
-                print(f"Checking collision with petal: {collision}")
-                if collision:
-                    print("Frog landed on a new petal!")
-                    frog.on_petal = True
-                    frog.current_petal = petal
-                    # Position frog on top of petal
-                    frog.rect.bottom = petal.rect.top
-                    frog.rect.centerx = petal.rect.centerx
-                    # Update position variables
-                    frog.x_pos = frog.rect.centerx
-                    frog.y_pos = frog.rect.centery
-                    break'''
+            # Calculate offset to keep frog in same position relative to petal
+            frog.offset_x = frog.rect.centerx - collided_petal.rect.centerx
+            frog.offset_y = frog.rect.bottom - collided_petal.rect.top
+
+            # Adjust frog position to sit on petal
+            frog.rect.centerx = collided_petal.rect.centerx + frog.offset_x
+            frog.rect.bottom = collided_petal.rect.top + frog.offset_y
+
+            print("Frog landed on petal!")
+
+def jump_frog(frog,Y_VELOCITY):
+    if frog.on_petal:
+        # Calculate where the frog should be when it jumps
+        # (this is just an example - adjust to your jump mechanics)
+        frog.rect.bottom = frog.current_petal.rect.top - 5
+        frog.on_petal = False
+        frog.current_petal = None
+        # Add your jump velocity here
+        Y_VELOCITY = -JUMP_HEIGHT
 
 def draw_mask(surface, sprite, color=(0, 255, 0)):
     mask_outline = sprite.mask.outline()
@@ -341,8 +312,7 @@ spawner = PetalSpawner(SCREEN_WIDTH)
 frog_group = pygame.sprite.Group()
 frog = Frog(Initial_X, 730)
 petal_group = pygame.sprite.Group()
-
-
+frog_group.add(frog)
 
 for lane in range(LANE_COUNT):
     lane_config = levels[current_level]['lanes'][lane]
@@ -428,12 +398,7 @@ while run:
     if not game_over:
         frog.update_image()
         Screen.fill(BACKGROUND_COLOR)
-        #screen.blit(frog.image, frog.rect)
         spawner.update(dt)
-        #outline = frog.mask.outline()
-        #if outline:
-            #points = [(x + frog.rect.x, y + frog.rect.y) for x, y in outline]
-            #pygame.draw.polygon(screen, (0, 255, 0), points, 1)
 
         keys_pressed = pygame.key.get_pressed()
         if keys_pressed[pygame.K_LEFT]:
@@ -446,16 +411,13 @@ while run:
 
         petal_group.update()
         petal_group.draw(Screen)
+        frog_group.update()
+        #frog.draw(Screen) # 2 frogs are shown no idea where the other is
         start.draw(Screen)
-        print(f"Frog jumping: {frog.jumping}")
-        print(f"Frog image size: {frog.image.get_size()}")
-        print(f"Frog mask size: {frog.mask.get_size()}")
-        print(f"Frog mask outline points: {len(frog.mask.outline())}")
-        frog.draw_hitbox(screen)
+        frog.draw_hitbox(screen) #-> die vierecke
 
         for petal in spawner.petals:
             screen.blit(petal.image, petal.rect)
-
 
         if jumping:
             visual_offset_x = 0
@@ -492,24 +454,23 @@ while run:
             Screen.blit(rotated_frog, frog_rect)
             draw_rotated_mask_at_position(screen, X_POSITION, Y_POSITION, frog_angle, frog.hitbox_surface)
 
-        # Get the hitbox position
         hitbox_rect = frog.get_hitbox_rect()
         # Draw mask at the hitbox position
         #draw_rotated_mask_at_position(screen, hitbox_rect.centerx, hitbox_rect.centery, frog_angle, frog.hitbox_surface)
-        frog.update_image()
-        print(f"Frog rect: ({frog.rect.x}, {frog.rect.y}), size: {frog.rect.size}")
-        print(f"Frog position: ({frog.x_pos}, {frog.y_pos})")
-        print(f"Frog hitbox: {frog.get_hitbox_rect()}")
-
-        for petal in petal_group:
-            print(f"Petal rect: ({petal.rect.x}, {petal.rect.y}), size: {petal.rect.size}")
-            break
 
         BOTTOM_BOUNDARY = 50
         if Y_POSITION > (SCREEN_HEIGHT) - BOTTOM_BOUNDARY:
             Y_POSITION = ((SCREEN_HEIGHT) - BOTTOM_BOUNDARY)
 
+        # Replace your current collision code with this:
+        if pygame.sprite.spritecollideany(frog, petal_group, pygame.sprite.collide_mask):
+            print("collision")
+            handle_landing(frog, petal_group, lane_config)
 
+        # Update frog position if it's riding a petal
+        if frog.on_petal and frog.current_petal:
+            frog.rect.centerx = frog.current_petal.rect.centerx + frog.offset_x
+            frog.rect.bottom = frog.current_petal.rect.top + frog.offset_y
 
         if level_completion():
             advance_level(Screen)
@@ -538,7 +499,7 @@ while run:
 
     for petal in petal_group:
         draw_mask(screen, petal, (255, 0, 0))
-        draw_rotated_mask_at_position(screen, X_POSITION, Y_POSITION, frog_angle, frog.hitbox_surface)
+        #draw_rotated_mask_at_position(screen, X_POSITION, Y_POSITION, frog_angle, frog.hitbox_surface) -> no idea for what this is
         hitbox_rect = frog.get_hitbox_rect()
 
     '''if water end game

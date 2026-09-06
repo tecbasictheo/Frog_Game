@@ -7,7 +7,7 @@ pygame.init()
 exitgame = False
 jumping = False
 Y_GRAVITY = 1
-JUMP_HEIGHT = 12  # abstand petals 10
+JUMP_HEIGHT = 5  # abstand petals 10
 Y_VELOCITY = JUMP_HEIGHT
 frog_angle = 0
 JUMP_Speed = 5.5
@@ -42,43 +42,104 @@ class Frog(pygame.sprite.Sprite):
         self.direction = direction
         self.speed = 5
         self.angle = frog_angle
+        self.offset_x = 0
+        self.offset_y = 0
         self.rect = self.image.get_rect(center=(x, y))
-        self.x_pos = float(x)
-        self.y_pos = float(y)
         self.rect.center = (x, y)
-        self.hitbox_size = (self.sitting_image.get_width() * 0.3,
-                    self.sitting_image.get_height() * 0.3)
-        self.hitbox_surface = pygame.Surface(self.hitbox_size, pygame.SRCALPHA)
-        pygame.draw.rect(self.hitbox_surface, (255, 255, 255),(0, 0, *self.hitbox_size))
-        self.mask = pygame.mask.from_surface(self.hitbox_surface)
-        self.hitbox_offset = (( (self.sitting_image.get_width() - self.hitbox_size[0]) / 2 - 50, (self.sitting_image.get_height() - self.hitbox_size[1]) / 2 - 30))
+        self.attach = 0
+        # Use the sprite image mask for collisions so mask + rect stay aligned
+        # physics velocities (optional; keep if you use velocity-based jumps)
+        self.vx = 0.0
+        self.vy = 0.0
+
+        # Use the sprite image as the mask so collide_mask uses the visible sprite area
+        self.mask = pygame.mask.from_surface(self.image)
+        # small debug hitbox rect (keeps aligned with sprite)
+        self.hitbox_rect = self.rect.inflate(-int(self.rect.width * 0.2), -int(self.rect.height * 0.2))
+
+    def attach_to_petal(self, petal):
+        """Attach frog to a petal and sit the frog on top of it."""
+        self.current_petal = petal
+        self.on_petal = True
+        self.jumping = False
+        self.update_image()
+     # Anchor the frog visually: bottom of frog sits at the top of the petal
+        self.rect.centerx = petal.rect.centerx
+        self.rect.bottom = petal.rect.top
+        self.vx = 0.0
+        self.vy = 0.0
+    # keep mask aligned with current image
+    def attach_to_petal(self, petal):
+            """Attach frog to a petal and sit the frog on top."""
+            self.current_petal = petal
+            self.on_petal = True
+            self.jumping = False
+            # preserve visual anchor while updating image
+            old_center = self.rect.center
+            self.update_image()  # will re-create rect centered at old_center
+            # Now anchor bottom to petal top (tiny overlap)
+            self.rect.centerx = petal.rect.centerx
+            self.rect.bottom = petal.rect.top + 2  # tweak +2 if you want more/less overlap
+            # Stop motion
+            self.vx = getattr(self, "vx", 0.0)
+            self.vy = getattr(self, "vy", 0.0)
+            # Use sitting-image mask for collisions (if you implemented that)
+            self.mask = pygame.mask.from_surface(self.image)
+    def detach_from_petal(self):
+         """Detach frog from current petal; preserve anchor so image swap doesn't pop visually."""
+         old_center = self.rect.center
+         self.current_petal = None
+         self.on_petal = False
+         self.jumping = True
+         self.update_image()
+         # preserve visual anchor when swapping images
+         self.rect = self.image.get_rect(center=old_center)
+         self.mask = pygame.mask.from_surface(self.image)
 
     def update_image(self):
-        if self.jumping:
-            self.image = self.jumping_image
-        else:
-            self.image = self.sitting_image
+            old_center = self.rect.center
+            self.image = self.jumping_image if self.jumping else self.sitting_image
+            self.rect = self.image.get_rect(center=old_center)
+            # mask from sitting image if you want collisions only when sitting:
+            if not self.jumping:
+                self.mask = pygame.mask.from_surface(self.sitting_image)
+            else:
+                self.mask = pygame.mask.Mask((1, 1), False)
+
+    def update(self):
+        def update(self):
+            self.update_hitbox()
+            if self.current_petal is not None:
+                self.rect.centerx = self.current_petal.rect.centerx
+                self.rect.bottom = self.current_petal.rect.top + 2
 
     def update_hitbox(self):
-        # Get the current hitbox rect centered on the frog
-        self.hitbox_rect = self.hitbox_surface.get_rect(center=self.rect.center)
+        # keep mask aligned with visible image and update a smaller debug hitbox rect
+        self.mask = pygame.mask.from_surface(self.image)
+        self.hitbox_rect = self.rect.inflate(-int(self.rect.width * 0.4), -int(self.rect.height * 0.4))
 
-        # Apply offset to position the hitbox correctly
-        self.hitbox_rect.x += self.hitbox_offset[0]
-        self.hitbox_rect.y += self.hitbox_offset[1]
+    def draw_hitbox(self, screen):
+        pygame.draw.rect(screen, (255, 0, 0), self.hitbox_rect, 2)
 
-        # If the frog is rotated, rotate the hitbox surface too
-        if self.angle != 0:
-            self.hitbox_surface_rotated = pygame.transform.rotate(
-                self.hitbox_surface, self.angle)
-            self.mask = pygame.mask.from_surface(self.hitbox_surface_rotated)
-            # Recenter after rotation
-            self.hitbox_rect = self.hitbox_surface_rotated.get_rect(center=self.rect.center)
-        else:
-            self.hitbox_surface_rotated = self.hitbox_surface
+    def draw(self, Screen):
+        # Rotate the frog image based on the angle
+        rotated_image = pygame.transform.rotate(self.image, self.angle)
 
-    def draw(self, Screen): # this works
-        Screen.blit(self.image, self.rect)
+        # Get the rect of the rotated image and center it at the frog's position
+        rotated_rect = rotated_image.get_rect(center=self.rect.center)
 
+        # Draw the rotated frog image
+        Screen.blit(rotated_image, rotated_rect)
 
+        # Draw the hitbox
+        self.draw_hitbox(Screen)
+
+        # Debug: Draw attachment line if attached
+        if self.current_petal is not None:
+            pygame.draw.line(Screen, (0, 255, 0),
+                             self.rect.center,
+                             self.current_petal.rect.center, 2)
+
+    def is_attached(self):
+        return self.current_petal is not None
 

@@ -5,7 +5,6 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 850
 BOTTOM_BOUNDARY = 5
 WIN_BOUNDARY = 10
-Screen = pygame.display.set_mode((800, 850))
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 from frog import *
@@ -34,8 +33,7 @@ levels = {
     1: {  # Level 1
         'lanes': [
             {'petals': 3, 'spacing': 150, 'speed': 2, 'direction': 1, 'y_pos': 605},
-            {'petals': 5, 'spacing': 250, 'speed': 3, 'direction': -1, 'y_pos': 475},
-            {'petals': 4, 'spacing': 220, 'speed': 1.5, 'direction': 1, 'y_pos': 345},
+            {'petals': 4, 'spacing': 250, 'speed': 3, 'direction': -1, 'y_pos': 475},
             {'petals': 6, 'spacing': 150, 'speed': 3, 'direction': 1, 'y_pos': 215},
             {'petals': 5, 'spacing': 200, 'speed': 1.75, 'direction': -1, 'y_pos': 95},
         ]
@@ -67,13 +65,11 @@ Petal_Images = [
     "media/Petal3_y.png"
 ]
 
-
 class Direction(Enum):
     UP = 0
     DOWN = 180
     LEFT = 270
     RIGHT = 90
-
 
 class Petal(pygame.sprite.Sprite):
 
@@ -83,9 +79,9 @@ class Petal(pygame.sprite.Sprite):
         image_choice = random.choice(Petal_Images)
         self.image = pygame.image.load(image_choice).convert_alpha()
         self.image = pygame.transform.scale(self.image, (125, 125))
-        self.rect = self.image.get_rect(center=(X_POSITION, Y_POSITION))
+        self.rect = self.image.get_rect()
         self.speed = 1.5
-        self.mask = pygame.mask.from_surface(self.image, 5)
+        self.mask = pygame.mask.from_surface(self.image, 50)
         self.lane = lane
         self.screen_width = SCREEN_WIDTH
         self.direction = direction
@@ -108,6 +104,7 @@ class Petal(pygame.sprite.Sprite):
             mask_surface = self.mask.to_surface()
             # Draw it at the frog's position
             screen.blit(mask_surface, self.rect.topleft)
+
 
 class PetalSpawner:
     def __init__(self, screen_width):
@@ -162,8 +159,8 @@ class Start():
         self.rect.x = self.x_st
         self.rect.y = self.y_st
 
-    def draw(self, Screen):
-        Screen.blit(self.image, self.rect)
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)
         #Screen.blit(self.mask, self.rect)
 
 
@@ -174,8 +171,19 @@ def load_level(level_number):
 
 lane_configs = load_level(current_level)
 
+def main_menu():
+    screen.fill((0, 0, 0))
+    font = pygame.font.SysFont('Arial', 72, bold=True)
+    title = font.render("FROGGER", True, (0, 255, 0))
+    title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3))
+    screen.blit(title, title_rect)
 
-def advance_level(Screen):
+    font = pygame.font.SysFont('Arial', 24)
+    start_text = font.render("PRESS SPACE TO START", True, (255, 255, 0))
+    start_rect = start_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 150))
+    screen.blit(start_text, start_rect)
+
+def advance_level(screen):
     global current_level, petal_group, LANE_COUNT, jumping, frog_angle
     current_level += 1
     if current_level > len(levels):
@@ -210,39 +218,28 @@ def advance_level(Screen):
     text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
     screen.blit(text_surface, text_rect)
     pygame.display.update()
-    time.sleep(1)  # move to main screen
+    main_menu()
+    time.sleep(1)
 
 
 def show_game_over_screen():
-    Screen.fill((255, 255, 255))
+    screen.fill((255, 255, 255))
     font = pygame.font.Font(None, 72)  # Large font
     text = font.render("You died", True, (255, 0, 0))  # Red text
     text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
-    Screen.blit(text, text_rect)
+    screen.blit(text, text_rect)
 
     restart_button = pygame.Rect(SCREEN_WIDTH // 2 - 50, SCREEN_HEIGHT // 2 + 50, 100, 50)
     pygame.draw.rect(screen, (0, 255, 0), restart_button)  # Green button
     restart_text = font.render("Restart", True, (0, 0, 0))
     restart_text_rect = restart_text.get_rect(center=restart_button.center)
-    Screen.blit(restart_text, restart_text_rect)
+    screen.blit(restart_text, restart_text_rect)
     main_menu_button = pygame.Rect(SCREEN_WIDTH // 2 - 50, SCREEN_HEIGHT // 2 + 100, 200, 100)
     pygame.draw.rect(screen, (0, 255, 0), main_menu_button)  # Green button
     menu_text = font.render("menu_text", True, (0, 0, 0))
     menu_text_rect = menu_text.get_rect(center=main_menu_button.center)
-    Screen.blit(menu_text, menu_text_rect)
+    screen.blit(menu_text, menu_text_rect)
     return restart_button, main_menu_button
-
-def main_menu():
-    screen.fill((0, 0, 0))
-    font = pygame.font.SysFont('Arial', 72, bold=True)
-    title = font.render("FROGGER", True, (0, 255, 0))
-    title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3))
-    screen.blit(title, title_rect)
-
-    font = pygame.font.SysFont('Arial', 24)
-    start_text = font.render("PRESS SPACE TO START", True, (255, 255, 0))
-    start_rect = start_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 150))
-    screen.blit(start_text, start_rect)
 
 def restart_game():
     global X_POSITION, Y_POSITION, game_over, run, jumping, frog_angle, GAME_STATE, current_level
@@ -273,41 +270,46 @@ def restart_game():
 
 def level_completion():
     global X_POSITION, Y_POSITION
+
     if Y_POSITION < 0:
         return True
     return False
 
 
-def handle_landing(frog, petal_group, lane_config=None):
-        # Find the petal the frog collided with
+def handle_collision(frog, petal_group):
+        # Check for collision with any petal using mask collision
         collided_petal = pygame.sprite.spritecollideany(frog, petal_group, pygame.sprite.collide_mask)
 
-        if collided_petal and not frog.on_petal:  # Only land once per collision
-            # Set riding state
+        if collided_petal and not frog.on_petal:
+            frog.attach_to_petal(collided_petal)
             frog.on_petal = True
             frog.current_petal = collided_petal
+            frog.jumping = False
+            frog.update_image()  # Switch to sitting image
 
-            # Calculate offset to keep frog in same position relative to petal
-            frog.offset_x = frog.rect.centerx - collided_petal.rect.centerx
-            frog.offset_y = frog.rect.bottom - collided_petal.rect.top
+            # Update global positions
+            global X_POSITION, Y_POSITION
+            X_POSITION = frog.rect.centerx
+            Y_POSITION = frog.rect.centery
 
             print("Frog landed on petal!")
+            return True
 
-def jump_frog(frog):
+        return False
+
+def jump_frog(frog, X_POSITION, Y_POSITION):
     if frog.on_petal:
-        # Calculate where the frog should be when it jumps
-        # (this is just an example - adjust to your jump mechanics)
-        frog.rect.bottom = frog.current_petal.rect.top - 75
+        X_POSITION = frog.rect.centerx
+        Y_POSITION = frog.rect.centery
         frog.on_petal = False
         frog.current_petal = None
 
-
 def draw_mask(surface, sprite, color=(0, 255, 0)):
     mask_outline = sprite.mask.outline()
-
     if mask_outline:
+        # Shift points to match sprite position
         points = [(x + sprite.rect.x, y + sprite.rect.y) for x, y in mask_outline]
-        pygame.draw.polygon(surface, color, points, 1)
+        pygame.draw.polygon(surface, color, points, 2)  # Thicker line for visibility
 
 
 start = Start()
@@ -355,6 +357,7 @@ while run:
                             new_petal.direction = lane_config['direction']
                             petal_group.add(new_petal)
 
+
         pygame.display.flip()
         continue
 
@@ -363,33 +366,46 @@ while run:
             run = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                print("SPACE PRESSED!")
-                print(f"Before: frog.jumping={frog.jumping}, jumping={jumping}")
-                if not jumping:
-                    jumping = True
-                    frog.jumping = True
-                    print(f"After: frog.jumping={frog.jumping}")
-                    Y_VELOCITY = JUMP_HEIGHT
-                    if Y_VELOCITY < -JUMP_HEIGHT:
-                        jumping = False
-                        frog.jumping = False
-                        Y_VELOCITY = JUMP_HEIGHT
-                        frog.update_image()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        if not jumping:
+                            if frog.on_petal:
+                                # Jumping from a petal
+                                frog.on_petal = False
+                                frog.current_petal = None
+                                # Position frog slightly above the petal for the jump
+                                frog.rect.y -= 50
+                                Y_POSITION = frog.rect.centery
+                            jumping = True
+                            frog.jumping = True
+                            Y_VELOCITY = JUMP_HEIGHT
+                            frog.update_image()
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if restart_button.collidepoint(event.pos):
                 restart_game()
                 game_over = False
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE and frog.on_petal:
-                frog.on_petal = False
-                frog.current_petal = None
-                frog.jumping = True
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    if not jumping:
+                        if frog.on_petal:
+                            # Detach from petal before jumping
+                            frog.detach_from_petal()
+
+                        # Start jump
+                        jumping = True
+                        frog.jumping = True
+                        Y_VELOCITY = JUMP_HEIGHT
+                        frog.update_image()
+
+                        # Reset angle for new jump
+                        frog.angle = 0
+                #frog.on_petal = False
+                #frog.current_petal = None
+                #frog.jumping = True
 
     if not game_over:
-        frog.update_image()
-        Screen.fill(BACKGROUND_COLOR)
-        spawner.update(dt)
 
         keys_pressed = pygame.key.get_pressed()
         if keys_pressed[pygame.K_LEFT]:
@@ -397,49 +413,17 @@ while run:
         if keys_pressed[pygame.K_RIGHT]:
             frog_angle -= 2
 
-        if SCREEN_WIDTH < X_POSITION or X_POSITION < 0:
-            game_over = True
-
-        petal_group.update()
-        petal_group.draw(Screen)
-        frog_group.update()
-        start.draw(Screen)
-        #frog.draw_hitbox(screen) #-> die vierecke
-        '''
-        # Replace the commented frog_group.update() with manual position updates:
-        if frog.on_petal and frog.current_petal:
-            # Update the frog's position variables to match the petal
-            frog.x_pos = frog.current_petal.rect.centerx + frog.offset_x
-            frog.y_pos = frog.current_petal.rect.top + frog.offset_y + (frog.sitting_image.get_height() // 2)
-            X_POSITION = frog.x_pos  # Update the global position variables
-            Y_POSITION = frog.y_pos
-            frog.rect.centerx = frog.x_pos
-            frog.rect.centery = frog.y_pos'''
-
-        for petal in spawner.petals:
-            screen.blit(petal.image, petal.rect)
-
         if jumping:
-            visual_offset_x = 0
-            visual_offset_y = 0
-
-            frog.rect.centerx = X_POSITION + visual_offset_x
-            frog.rect.centery = Y_POSITION + visual_offset_y
             angle_rad = math.radians(270 - frog_angle)  # convert angle to radians
             dx = math.cos(angle_rad) * JUMP_Speed
             dy = math.sin(angle_rad) * JUMP_Speed
             X_POSITION += dx
             Y_POSITION += dy
-            frog.rect.centerx = frog.x_pos
-            frog.rect.centery = frog.y_pos
             Y_VELOCITY -= Y_GRAVITY
 
-            frog_rect = Frog_j.get_rect(center=(X_POSITION + visual_offset_x, Y_POSITION + visual_offset_y))
-            rotated_frog = pygame.transform.rotate(Frog_j, frog_angle)
-            Screen.blit(rotated_frog, frog_rect)
-            if hasattr(frog, 'hitbox_rect'):
-                pygame.draw.rect(Screen, (255, 0, 0), frog.hitbox_rect, 2)
-            #draw_rotated_mask_at_position(screen, X_POSITION, Y_POSITION, frog_angle, frog.frog.hitbox)
+            frog.rect.center = (X_POSITION, Y_POSITION)
+            frog.angle = frog_angle
+            frog.update_hitbox()
 
             if Y_VELOCITY < -JUMP_HEIGHT:
                 jumping = False
@@ -448,39 +432,51 @@ while run:
                 frog.update_image()
                 frog.update_hitbox()
         else:
-            visual_offset_x = 0
-            visual_offset_y = 0
-            frog.rect.centerx = X_POSITION + visual_offset_x
-            frog.rect.centery = Y_POSITION + visual_offset_y
-            #if frog.on_petal and frog.current_petal:
-                #frog.rect.centerx = frog.current_petal.rect.centerx + frog.offset_x
-                #frog.rect.bottom = frog.current_petal.rect.top + frog.offset_y
-            frog_rect = Frog_s.get_rect(center=(X_POSITION + visual_offset_x, Y_POSITION + visual_offset_y))
-            rotated_frog = pygame.transform.rotate(Frog_s, frog_angle)
-            frog.update_image()
+            frog.rect.center = (X_POSITION, Y_POSITION)
+            frog.angle = frog_angle
             frog.update_hitbox()
-            Screen.blit(rotated_frog, frog_rect)
-            #frog.draw(screen, X_POSITION, Y_POSITION, frog_angle, frog.hitbox)
-            if hasattr(frog, 'hitbox_rect'):
-                pygame.draw.rect(Screen, (255, 0, 0), frog.hitbox_rect, 2)
 
-        #hitbox_rect = frog.get_hitbox_rect()
-        #draw_rotated_mask_at_position(screen, hitbox_rect.centerx, hitbox_rect.centery, frog_angle, frog.frog.hitbox)
+        if not jumping and frog.on_petal and frog.current_petal:
+                frog.rect.x = frog.current_petal.rect.x
+                frog.rect.y = frog.current_petal.rect.y
+                X_POSITION = frog.rect.centerx
+                Y_POSITION = frog.rect.centery
+                frog.update_hitbox()
+
+        frog.update_image()
+        screen.fill(BACKGROUND_COLOR)
+        spawner.update(dt)
+
+        petal_group.update()
+        petal_group.draw(screen)
+        frog_group.update()
+        start.draw(screen)
+        frog.draw(screen)
+        frog_group.update()
+
+        for petal in spawner.petals:
+            screen.blit(petal.image, petal.rect)
+        for petal in petal_group:
+            petal.mask = pygame.mask.from_surface(petal.image)
 
         BOTTOM_BOUNDARY = 50
         if Y_POSITION > (SCREEN_HEIGHT) - BOTTOM_BOUNDARY:
             Y_POSITION = ((SCREEN_HEIGHT) - BOTTOM_BOUNDARY)
 
+        if SCREEN_WIDTH < X_POSITION or X_POSITION < 0:
+            game_over = True
+
         if pygame.sprite.spritecollideany(frog, petal_group, pygame.sprite.collide_mask):
             print("collision")
-            handle_landing(frog, petal_group, lane_config)
+            handle_collision(frog, petal_group)
 
         if frog.on_petal and frog.current_petal:
             frog.rect.centerx = frog.current_petal.rect.centerx + frog.offset_x
             frog.rect.bottom = frog.current_petal.rect.top + frog.offset_y
 
         if level_completion():
-            advance_level(Screen)
+            frog.jumping = False
+            advance_level(screen)
             X_POSITION = Initial_X
             Y_POSITION = Initial_Y
 
@@ -519,7 +515,6 @@ while run:
                         restart_game()
                         game_over = False
                         '''
-
 
     pygame.display.flip()
     pygame.display.update()

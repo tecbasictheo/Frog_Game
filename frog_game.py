@@ -328,7 +328,7 @@ for lane in range(LANE_COUNT):
         new_petal.speed = lane_config['speed']
         new_petal.direction = lane_config['direction']
         petal_group.add(new_petal)
-
+_last_mask_real = None
 while run:
     dt = clock.tick(60) / 1000.0
     if GAME_STATE == "MENU":
@@ -453,6 +453,15 @@ while run:
         start.draw(screen)
         frog.draw(screen)
         frog_group.update()
+        if hasattr(frog, "mask") and frog.mask is not None:
+            mask_real = (frog.mask.count() > 0)
+        else:
+            mask_real = False
+
+        if mask_real != _last_mask_real:
+            print(
+                f"[mask debug] frog.mask.count() = {frog.mask.count() if hasattr(frog, 'mask') and frog.mask is not None else 'None'} -> real = {mask_real}")
+            _last_mask_real = mask_real
 
         for petal in spawner.petals:
             screen.blit(petal.image, petal.rect)
@@ -463,7 +472,7 @@ while run:
         if Y_POSITION > (SCREEN_HEIGHT) - BOTTOM_BOUNDARY:
             Y_POSITION = ((SCREEN_HEIGHT) - BOTTOM_BOUNDARY)
 
-        if SCREEN_WIDTH < X_POSITION or X_POSITION < 0:
+        if SCREEN_WIDTH + 20 < X_POSITION or X_POSITION < 0 -20:
             game_over = True
 
         if pygame.sprite.spritecollideany(frog, petal_group, pygame.sprite.collide_mask):

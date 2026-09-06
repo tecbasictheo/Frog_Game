@@ -7,10 +7,10 @@ pygame.init()
 exitgame = False
 jumping = False
 Y_GRAVITY = 1
-JUMP_HEIGHT = 5  # abstand petals 10
+JUMP_HEIGHT = 20# abstand petals 10
 Y_VELOCITY = JUMP_HEIGHT
 frog_angle = 0
-JUMP_Speed = 5.5
+JUMP_Speed = 6
 direction = frog_angle
 
 X_POSITION, Y_POSITION = 400, 825
@@ -53,38 +53,25 @@ class Frog(pygame.sprite.Sprite):
         self.vy = 0.0
 
         # Use the sprite image as the mask so collide_mask uses the visible sprite area
-        self.mask = pygame.mask.from_surface(self.image)
+        self.mask = pygame.mask.from_surface(self.sitting_image)
         # small debug hitbox rect (keeps aligned with sprite)
-        self.hitbox_rect = self.rect.inflate(-int(self.rect.width * 0.2), -int(self.rect.height * 0.2))
+        self.hitbox_rect = self.rect.inflate(-int(self.rect.width * 1), -int(self.rect.height * 1))
 
     def attach_to_petal(self, petal):
         """Attach frog to a petal and sit the frog on top of it."""
         self.current_petal = petal
         self.on_petal = True
         self.jumping = False
+        old_center = self.rect.center
         self.update_image()
      # Anchor the frog visually: bottom of frog sits at the top of the petal
-        self.rect.centerx = petal.rect.centerx
-        self.rect.bottom = petal.rect.top
+        #self.rect.centerx = petal.rect.centerx
+        #self.rect.bottom = petal.rect.top
+        self.rect = self.image.get_rect(center=old_center)
         self.vx = 0.0
         self.vy = 0.0
     # keep mask aligned with current image
-    def attach_to_petal(self, petal):
-            """Attach frog to a petal and sit the frog on top."""
-            self.current_petal = petal
-            self.on_petal = True
-            self.jumping = False
-            # preserve visual anchor while updating image
-            old_center = self.rect.center
-            self.update_image()  # will re-create rect centered at old_center
-            # Now anchor bottom to petal top (tiny overlap)
-            self.rect.centerx = petal.rect.centerx
-            self.rect.bottom = petal.rect.top + 2  # tweak +2 if you want more/less overlap
-            # Stop motion
-            self.vx = getattr(self, "vx", 0.0)
-            self.vy = getattr(self, "vy", 0.0)
-            # Use sitting-image mask for collisions (if you implemented that)
-            self.mask = pygame.mask.from_surface(self.image)
+
     def detach_from_petal(self):
          """Detach frog from current petal; preserve anchor so image swap doesn't pop visually."""
          old_center = self.rect.center
@@ -94,29 +81,35 @@ class Frog(pygame.sprite.Sprite):
          self.update_image()
          # preserve visual anchor when swapping images
          self.rect = self.image.get_rect(center=old_center)
-         self.mask = pygame.mask.from_surface(self.image)
+         #self.mask = pygame.mask.from_surface(self.image)
 
     def update_image(self):
-            old_center = self.rect.center
+            old_center = getattr(self, "rect", pygame.Rect(0, 0, 0, 0)).center
             self.image = self.jumping_image if self.jumping else self.sitting_image
             self.rect = self.image.get_rect(center=old_center)
             # mask from sitting image if you want collisions only when sitting:
             if not self.jumping:
-                self.mask = pygame.mask.from_surface(self.sitting_image)
+                #self.mask = pygame.mask.from_surface(self.sitting_image)
+                w, h = self.sitting_image.get_size() # maybe this was size adjust
+                scale = 0.6  # 60% size; change to 0.5 for smaller, 0.8 for larger
+                small = pygame.transform.smoothscale(self.sitting_image, (int(w * scale), int(h * scale)))
+                small_surf = pygame.Surface((w, h), pygame.SRCALPHA)
+                pos = ((w - small.get_width()) // 2, (h - small.get_height()) // 2)
+                small_surf.blit(small, pos)
+                self.mask = pygame.mask.from_surface(small_surf)
             else:
                 self.mask = pygame.mask.Mask((1, 1), False)
 
     def update(self):
-        def update(self):
             self.update_hitbox()
-            if self.current_petal is not None:
-                self.rect.centerx = self.current_petal.rect.centerx
-                self.rect.bottom = self.current_petal.rect.top + 2
+            #if self.current_petal is not None:
+                #self.rect.centerx = self.current_petal.rect.centerx
+                #self.rect.bottom = self.current_petal.rect.top + 2
 
     def update_hitbox(self):
         # keep mask aligned with visible image and update a smaller debug hitbox rect
-        self.mask = pygame.mask.from_surface(self.image)
-        self.hitbox_rect = self.rect.inflate(-int(self.rect.width * 0.4), -int(self.rect.height * 0.4))
+        #self.mask = pygame.mask.from_surface(self.image)
+        self.hitbox_rect = self.rect.inflate(-int(self.rect.width * 0.75), -int(self.rect.height * 0.75)) # maybe this is size adjust
 
     def draw_hitbox(self, screen):
         pygame.draw.rect(screen, (255, 0, 0), self.hitbox_rect, 2)
@@ -124,13 +117,10 @@ class Frog(pygame.sprite.Sprite):
     def draw(self, Screen):
         # Rotate the frog image based on the angle
         rotated_image = pygame.transform.rotate(self.image, self.angle)
-
         # Get the rect of the rotated image and center it at the frog's position
         rotated_rect = rotated_image.get_rect(center=self.rect.center)
-
         # Draw the rotated frog image
         Screen.blit(rotated_image, rotated_rect)
-
         # Draw the hitbox
         self.draw_hitbox(Screen)
 

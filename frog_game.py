@@ -5,16 +5,17 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 850
 BOTTOM_BOUNDARY = 5
 WIN_BOUNDARY = 10
+WATER_ZONE = pygame.Rect(20, 20, 700, 700)
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 from frog import *
 from enum import Enum
 import math
 
+#on_petal = pygame.sprite.spritecollideany(frog, petal_group, pygame.sprite.collide_mask)
 run = True
 jumping = False
 game_over = False
-fall_water = False
 GAME_STATE = "MENU"
 restart_button = None
 main_menu_button = None
@@ -453,6 +454,11 @@ while run:
         start.draw(screen)
         frog.draw(screen)
         frog_group.update()
+        frog.update_hitbox()
+        on_petal = pygame.sprite.spritecollideany(frog, petal_group, pygame.sprite.collide_mask)
+        fall_water = frog.rect.colliderect(WATER_ZONE)
+
+
         if hasattr(frog, "mask") and frog.mask is not None:
             mask_real = (frog.mask.count() > 0)
         else:
@@ -467,6 +473,8 @@ while run:
             screen.blit(petal.image, petal.rect)
         for petal in petal_group:
             petal.mask = pygame.mask.from_surface(petal.image)
+        #pygame.draw.rect(screen, (0, 100, 255), WATER_ZONE)
+
 
         BOTTOM_BOUNDARY = 50
         if Y_POSITION > (SCREEN_HEIGHT) - BOTTOM_BOUNDARY:
@@ -475,7 +483,7 @@ while run:
         if SCREEN_WIDTH + 20 < X_POSITION or X_POSITION < 0 -20:
             game_over = True
 
-        if pygame.sprite.spritecollideany(frog, petal_group, pygame.sprite.collide_mask):
+        if on_petal:
             print("collision")
             handle_collision(frog, petal_group)
 
@@ -489,8 +497,13 @@ while run:
             X_POSITION = Initial_X
             Y_POSITION = Initial_Y
 
-        # fall water defineren
-        # if outside of map end game
+        if (not on_petal) and (not frog.jumping) and fall_water:
+            print("Frog in water and not on petal -> game over")
+            print(Y_POSITION)
+            print(f"frog.rect={frog.rect}, WATER_ZONE={WATER_ZONE}, fall_water={fall_water}, on_petal={bool(on_petal)}, jumping={frog.jumping}")
+            print("frog.rect=", frog.rect, "hitbox=", frog.hitbox_rect)
+            game_over = True
+
     elif game_over == True:
         GAME_STATE = "GAME_OVER"
         restart_button, main_menu_button = show_game_over_screen()
@@ -510,20 +523,7 @@ while run:
 
     for petal in petal_group:
         draw_mask(screen, petal, (255, 0, 0))
-        #draw_rotated_mask_at_position(screen, X_POSITION, Y_POSITION, frog_angle, frog.hitbox_surface) -> no idea for what this is
-        #hitbox_rect = frog.get_hitbox_rect()
 
-    '''if water end game
-    elif fall_water == True:  # if Frog_s not in ... :  #petal boundary
-        if game_over == True:
-        #run = False  # maybe das is falsch aber denke um den game loop neu zustarten
-            restart_button = show_game_over_screen()
-            for event in pygame.event.get():
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if restart_button.collidepoint(event.pos):
-                        restart_game()
-                        game_over = False
-                        '''
 
     pygame.display.flip()
     pygame.display.update()

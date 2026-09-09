@@ -1,3 +1,5 @@
+import time
+
 import pygame
 
 pygame.init()
@@ -496,12 +498,14 @@ while run:
             advance_level(screen)
             X_POSITION = Initial_X
             Y_POSITION = Initial_Y
+            frog.update_hitbox()
 
-        if (not on_petal) and (not frog.jumping) and fall_water:
+        elif (not on_petal) and (not frog.jumping) and fall_water:
             print("Frog in water and not on petal -> game over")
             print(Y_POSITION)
             print(f"frog.rect={frog.rect}, WATER_ZONE={WATER_ZONE}, fall_water={fall_water}, on_petal={bool(on_petal)}, jumping={frog.jumping}")
             print("frog.rect=", frog.rect, "hitbox=", frog.hitbox_rect)
+            time.sleep(1)
             game_over = True
 
     elif game_over == True:

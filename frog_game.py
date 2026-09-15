@@ -9,6 +9,9 @@ BOTTOM_BOUNDARY = 5
 WIN_BOUNDARY = 10
 WATER_ZONE = pygame.Rect(20, 20, 700, 700)
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+bg_image = pygame.image.load("media/background.png")
+bg = pygame.transform.scale(bg_image, (SCREEN_WIDTH + 50, SCREEN_HEIGHT + 25))
+
 
 from frog import *
 from enum import Enum
@@ -30,6 +33,7 @@ current_level = 1
 Show_text = False
 text_start_time = 0
 text_duration = 2.0
+frog_rotation_angle = 0
 
 #sound setup
 falling_water_sound = pygame.mixer.Sound("media/falling_water.wav")
@@ -180,7 +184,15 @@ def load_level(level_number):
 
 
 def render_mainmenu():
-    screen.fill((0, 0, 0))
+    global frog_rotation_angle
+    screen.blit(bg, (0, 0))
+    frog_rotation_angle += 2
+    if frog_rotation_angle >= 360:
+        frog_rotation_angle = 0
+    Frog_si = pygame.transform.scale(Sitting_f, (w_1 * 0.6, h_1 * 0.6))
+    Frog_si = pygame.transform.rotate(Frog_si, frog_rotation_angle)
+    Frog_rect = Frog_si.get_rect(center=(400, 500))
+    screen.blit(Frog_si, Frog_rect)
     font = pygame.font.SysFont('Arial', 72, bold=True)
     title = font.render("FROGGER", True, (0, 255, 0))
     title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3))
@@ -240,7 +252,7 @@ def advance_level(screen):
 
 def show_game_over_screen():
     global GAME_STATE
-    screen.fill((255, 255, 255))
+    screen.blit(bg, (0, 0))
     font = pygame.font.Font(None, 72)  # Large font
     text = font.render("You died", True, (255, 0, 0))  # Red text
     text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
@@ -473,6 +485,7 @@ while run:
                     frog.update_hitbox()
 
             frog.update_image()
+            #screen.blit(bg,(0,0))
             screen.fill(BACKGROUND_COLOR)
             spawner.update(dt)
 
@@ -486,7 +499,7 @@ while run:
             on_petal = pygame.sprite.spritecollideany(frog, petal_group, pygame.sprite.collide_mask)
             fall_water = frog.rect.colliderect(WATER_ZONE)
 
-            if hasattr(frog, "mask") and frog.mask is not None:
+            '''if hasattr(frog, "mask") and frog.mask is not None:
                 mask_real = (frog.mask.count() > 0)
             else:
                 mask_real = False
@@ -494,13 +507,13 @@ while run:
             if mask_real != _last_mask_real:
                 print(
                     f"[mask debug] frog.mask.count() = {frog.mask.count() if hasattr(frog, 'mask') and frog.mask is not None else 'None'} -> real = {mask_real}")
-                _last_mask_real = mask_real
+                _last_mask_real = mask_real'''
 
-            for petal in spawner.petals:
+            '''for petal in spawner.petals:
                 screen.blit(petal.image, petal.rect)
             for petal in petal_group:
                 petal.mask = pygame.mask.from_surface(petal.image)
-            #pygame.draw.rect(screen, (0, 100, 255), WATER_ZONE)
+            #pygame.draw.rect(screen, (0, 100, 255), WATER_ZONE)'''
 
             BOTTOM_BOUNDARY = 50
             if Y_POSITION > (SCREEN_HEIGHT) - BOTTOM_BOUNDARY:
@@ -561,8 +574,8 @@ while run:
                     frog.jumping = False
                     game_over = False
 
-    for petal in petal_group:
-        draw_mask(screen, petal, (255, 0, 0))
+    '''for petal in petal_group:
+        draw_mask(screen, petal, (255, 0, 0))'''
 
 
     pygame.display.flip()

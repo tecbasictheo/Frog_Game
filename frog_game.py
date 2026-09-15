@@ -186,7 +186,7 @@ def load_level(level_number):
 def render_mainmenu():
     global frog_rotation_angle
     screen.blit(bg, (0, 0))
-    frog_rotation_angle += 2
+    frog_rotation_angle -= 2
     if frog_rotation_angle >= 360:
         frog_rotation_angle = 0
     Frog_si = pygame.transform.scale(Sitting_f, (w_1 * 0.6, h_1 * 0.6))

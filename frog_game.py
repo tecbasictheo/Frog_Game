@@ -369,6 +369,7 @@ while run:
                     GAME_STATE = "PLAYING"
                     X_POSITION = Initial_X
                     Y_POSITION = Initial_Y
+                    LANE_COUNT = len(levels[current_level]['lanes'])
                     frog.rect.center = (X_POSITION, Y_POSITION)
                     jumping = False
                     frog.jumping = False

@@ -191,10 +191,13 @@ def main_menu():
     pygame.display.flip()
 
 def advance_level(screen):
-    global current_level, petal_group, LANE_COUNT, jumping, frog_angle
+    global current_level, petal_group, LANE_COUNT, jumping, frog_angle, GAME_STATE, game_over
     current_level += 1
     if current_level > len(levels):
         current_level = 1
+        GAME_STATE = "MENU"
+        game_over = False
+        return False
 
     LANE_COUNT = len(levels[current_level]['lanes'])
     petal_group.empty()
@@ -225,9 +228,8 @@ def advance_level(screen):
         text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
         screen.blit(text_surface, text_rect)
         pygame.display.update()
+        time.sleep(2)
         main_menu()
-        pygame.display.update()
-
 
 def show_game_over_screen():
     global GAME_STATE
@@ -251,7 +253,7 @@ def show_game_over_screen():
     return restart_button, main_menu_button
 
 def restart_game():
-    global X_POSITION, Y_POSITION, game_over, run, jumping, frog_angle, GAME_STATE, current_level
+    global X_POSITION, Y_POSITION, game_over, run, jumping, frog_angle, GAME_STATE, current_level, LANE_COUNT
     GAME_STATE = "RESTART"
     X_POSITION = Initial_X
     Y_POSITION = Initial_Y
@@ -260,11 +262,15 @@ def restart_game():
     game_over = False
     GAME_STATE = "PLAYING"
 
+    LANE_COUNT = len(levels[current_level]['lanes'])
+
     frog.rect.center = (X_POSITION, Y_POSITION)
     frog.jumping = False
     frog.on_petal = False
     frog.current_petal = None
     current_level = 1
+
+    LANE_COUNT = len(levels[current_level]['lanes'])
     petal_group.empty()
 
     for lane in range(LANE_COUNT):
@@ -464,7 +470,6 @@ while run:
             on_petal = pygame.sprite.spritecollideany(frog, petal_group, pygame.sprite.collide_mask)
             fall_water = frog.rect.colliderect(WATER_ZONE)
 
-
             if hasattr(frog, "mask") and frog.mask is not None:
                 mask_real = (frog.mask.count() > 0)
             else:
@@ -480,7 +485,6 @@ while run:
             for petal in petal_group:
                 petal.mask = pygame.mask.from_surface(petal.image)
             #pygame.draw.rect(screen, (0, 100, 255), WATER_ZONE)
-
 
             BOTTOM_BOUNDARY = 50
             if Y_POSITION > (SCREEN_HEIGHT) - BOTTOM_BOUNDARY:
@@ -499,10 +503,13 @@ while run:
 
             if level_completion():
                 frog.jumping = False
-                advance_level(screen)
-                X_POSITION = Initial_X
-                Y_POSITION = Initial_Y
-                frog.update_hitbox()
+                if not advance_level(screen):
+                    pass
+                else:
+                    X_POSITION = Initial_X
+                    Y_POSITION = Initial_Y
+                    frog.update_hitbox()
+                    game_over = False
 
             elif (not on_petal) and (not frog.jumping) and fall_water:
                 print("Frog in water and not on petal -> game over")

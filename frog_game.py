@@ -14,7 +14,6 @@ from frog import *
 from enum import Enum
 import math
 
-#on_petal = pygame.sprite.spritecollideany(frog, petal_group, pygame.sprite.collide_mask)
 run = True
 jumping = False
 game_over = False
@@ -31,6 +30,14 @@ current_level = 1
 Show_text = False
 text_start_time = 0
 text_duration = 2.0
+
+#sound setup
+falling_water_sound = pygame.mixer.Sound("media/falling_water.wav")
+water_sound = pygame.mixer.Sound("media/water_moving.wav")
+background_music = pygame.mixer.Sound("media/music.wav")
+
+water_sound_playing = False
+background_music_playing = False
 
 levels = {
     1: {  # Level 1
@@ -238,7 +245,7 @@ def show_game_over_screen():
     text = font.render("You died", True, (255, 0, 0))  # Red text
     text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
     screen.blit(text, text_rect)
-    GAME_STATE = "RESTART"
+    #GAME_STATE = "RESTART"
 
     restart_button = pygame.Rect(SCREEN_WIDTH // 2 - 50, SCREEN_HEIGHT // 2 + 50, 100, 50)
     pygame.draw.rect(screen, (0, 255, 0), restart_button)  # Green button
@@ -346,9 +353,13 @@ for lane in range(LANE_COUNT):
 _last_mask_real = None
 GAME_STATE = "MENU"
 main_menu()
+background_music.play(-1)
+background_music_playing = True
 while run:
     dt = clock.tick(60) / 1000.0
     if GAME_STATE == "MENU":
+        water_sound.stop()
+        water_sound_playing = False
         render_mainmenu()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -382,6 +393,7 @@ while run:
                 if event.key == pygame.K_SPACE:
                     restart_game()
                     game_over = False
+                    water_sound_playing = False
 
         #pygame.display.flip()
         #continue
@@ -419,6 +431,9 @@ while run:
 
 
         if not game_over:
+            if not water_sound_playing:
+                water_sound.play(-1)
+                water_sound_playing = True
 
             keys_pressed = pygame.key.get_pressed()
             if keys_pressed[pygame.K_LEFT]:
@@ -516,28 +531,34 @@ while run:
                 print(Y_POSITION)
                 print(f"frog.rect={frog.rect}, WATER_ZONE={WATER_ZONE}, fall_water={fall_water}, on_petal={bool(on_petal)}, jumping={frog.jumping}")
                 print("frog.rect=", frog.rect, "hitbox=", frog.hitbox_rect)
+                falling_water_sound.play()
                 game_over = True
 
         if game_over:
+            water_sound.stop()
+            water_sound_playing = False
             GAME_STATE = "GAME_OVER"
 
     elif GAME_STATE == "GAME_OVER":
+        water_sound.stop()
+        water_sound_playing = False
         show_game_over_screen()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
             if event.type == pygame.KEYDOWN:
-                 if event.key == pygame.K_SPACE:
+                if event.key == pygame.K_SPACE:
                     restart_game()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_l: #does not work
-                    main_menu()
+                if event.key == pygame.K_m: #does not work
+                    GAME_STATE = "MENU"
                     current_level = 1
+                    LANE_COUNT = len(levels[current_level]['lanes'])
                     X_POSITION = Initial_X
                     Y_POSITION = Initial_Y
                     frog.rect.center = (X_POSITION, Y_POSITION)
                     jumping = False
                     frog.jumping = False
+                    game_over = False
 
     for petal in petal_group:
         draw_mask(screen, petal, (255, 0, 0))

@@ -194,9 +194,17 @@ def advance_level(screen):
     global current_level, petal_group, LANE_COUNT, jumping, frog_angle, GAME_STATE, game_over
     current_level += 1
     if current_level > len(levels):
+        font = pygame.font.SysFont('Times New Roman', 50)
+        text_surface = font.render("You WIN!", True, (0, 0, 0))
+        text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        screen.blit(text_surface, text_rect)
+        pygame.display.update()
+        time.sleep(1)
+
         current_level = 1
         GAME_STATE = "MENU"
         game_over = False
+        petal_group.empty()
         return False
 
     LANE_COUNT = len(levels[current_level]['lanes'])
@@ -222,14 +230,6 @@ def advance_level(screen):
         pygame.display.update()
         time.sleep(1)
         return True
-    else:
-        font = pygame.font.SysFont('Times New Roman', 50)
-        text_surface = font.render("You WIN!", True, (0, 0, 0))
-        text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
-        screen.blit(text_surface, text_rect)
-        pygame.display.update()
-        time.sleep(2)
-        main_menu()
 
 def show_game_over_screen():
     global GAME_STATE

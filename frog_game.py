@@ -193,15 +193,19 @@ def render_mainmenu():
     Frog_si = pygame.transform.rotate(Frog_si, frog_rotation_angle)
     Frog_rect = Frog_si.get_rect(center=(400, 500))
     screen.blit(Frog_si, Frog_rect)
-    font = pygame.font.SysFont('Arial', 72, bold=True)
-    title = font.render("FROGGER", True, (0, 255, 0))
+    font = pygame.font.SysFont('Herculanum', 100, bold=True)
+    title = font.render("FROGGER", True, (60, 179, 113))
     title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3))
     screen.blit(title, title_rect)
 
-    font = pygame.font.SysFont('Arial', 24)
-    start_text = font.render("PRESS SPACE TO START", True, (255, 255, 0))
+    font = pygame.font.SysFont('Arial', 24, bold=True)
+    start_text = font.render("PRESS SPACE TO START", True, (60, 179, 113))
     start_rect = start_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 150))
     screen.blit(start_text, start_rect)
+    font = pygame.font.SysFont('Arial', 24, bold=True)
+    start_text_p = font.render("< CHANGE ANGEL >", True, (60, 179, 113))
+    start_rect_p = start_text_p.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 200))
+    screen.blit(start_text_p, start_rect_p)
 
 def main_menu():
     global GAME_STATE

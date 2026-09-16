@@ -1,16 +1,13 @@
-# Class: Petals
-# Child classes
-# work with lanes
+
 
 import random
 import pygame
-import time
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 850
 LANE_HEIGHT = 170
 
-
+'''
 class Petal(pygame.sprite.Sprite):
 
     def __init__(self, lane):
@@ -68,4 +65,4 @@ class PetalSpawner:
 
     def draw(self):
         for petal in self.petals:
-            petal.draw()
+            petal.draw()'''

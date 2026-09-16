@@ -193,17 +193,17 @@ def render_mainmenu():
     Frog_si = pygame.transform.rotate(Frog_si, frog_rotation_angle)
     Frog_rect = Frog_si.get_rect(center=(400, 500))
     screen.blit(Frog_si, Frog_rect)
-    font = pygame.font.SysFont('Herculanum', 100, bold=True)
+    font = pygame.font.SysFont('Herculanum', 90)
     title = font.render("FROGGER", True, (60, 179, 113))
     title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3))
     screen.blit(title, title_rect)
 
-    font = pygame.font.SysFont('Arial', 24, bold=True)
-    start_text = font.render("PRESS SPACE TO START", True, (60, 179, 113))
+    font = pygame.font.SysFont('Times New Roman', 25)
+    start_text = font.render("Press space for start", True, (0,0,0))
     start_rect = start_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 150))
     screen.blit(start_text, start_rect)
-    font = pygame.font.SysFont('Arial', 24, bold=True)
-    start_text_p = font.render("< CHANGE ANGEL >", True, (60, 179, 113))
+    font = pygame.font.SysFont('Times New Roman', 25)
+    start_text_p = font.render("< Change angle >", True, (0,0,0))
     start_rect_p = start_text_p.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 200))
     screen.blit(start_text_p, start_rect_p)
 
@@ -244,7 +244,7 @@ def advance_level(screen):
             petal_group.add(new_petal)
 
     if current_level != 1:
-        font = pygame.font.SysFont('Times New Roman', 30)
+        font = pygame.font.SysFont('Times New Roman', 50)
         text_surface = font.render("Level UP!", True, (0, 0, 0))
         text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
         screen.blit(text_surface, text_rect)
@@ -257,23 +257,18 @@ def advance_level(screen):
 def show_game_over_screen():
     global GAME_STATE
     screen.blit(bg, (0, 0))
-    font = pygame.font.Font(None, 72)  # Large font
-    text = font.render("You died", True, (255, 0, 0))  # Red text
+    font = pygame.font.SysFont('Herculanum', 72)
+    text = font.render("You died", True, (255, 0, 0))
     text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
     screen.blit(text, text_rect)
-    #GAME_STATE = "RESTART"
 
-    restart_button = pygame.Rect(SCREEN_WIDTH // 2 - 50, SCREEN_HEIGHT // 2 + 50, 100, 50)
-    pygame.draw.rect(screen, (0, 255, 0), restart_button)  # Green button
-    restart_text = font.render("Restart", True, (0, 0, 0))
-    restart_text_rect = restart_text.get_rect(center=restart_button.center)
+    font = pygame.font.SysFont('Times New Roman', 25)
+    restart_text = font.render("Press space for restart", True, (0, 0, 0))
+    restart_text_rect = restart_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 150))
     screen.blit(restart_text, restart_text_rect)
-    main_menu_button = pygame.Rect(SCREEN_WIDTH // 2 - 50, SCREEN_HEIGHT // 2 + 100, 200, 100)
-    pygame.draw.rect(screen, (0, 255, 0), main_menu_button)  # Green button
-    menu_text = font.render("menu_text", True, (0, 0, 0))
-    menu_text_rect = menu_text.get_rect(center=main_menu_button.center)
+    menu_text = font.render("Press m for menu", True, (0, 0, 0))
+    menu_text_rect = menu_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 200))
     screen.blit(menu_text, menu_text_rect)
-    return restart_button, main_menu_button
 
 def restart_game():
     global X_POSITION, Y_POSITION, game_over, run, jumping, frog_angle, GAME_STATE, current_level, LANE_COUNT

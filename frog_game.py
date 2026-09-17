@@ -16,6 +16,7 @@ bg = pygame.transform.scale(bg_image, (SCREEN_WIDTH + 50, SCREEN_HEIGHT + 25))
 from frog import *
 from enum import Enum
 import math
+import random
 
 run = True
 jumping = False
@@ -311,8 +312,6 @@ def handle_collision(frog, petal_group):
             global X_POSITION, Y_POSITION
             X_POSITION = frog.rect.centerx
             Y_POSITION = frog.rect.centery
-
-            print("Frog landed on petal!")
             return True
 
         return False
@@ -474,7 +473,6 @@ while run:
                 game_over = True
 
             if on_petal:
-                print("collision")
                 handle_collision(frog, petal_group)
 
             if frog.on_petal and frog.current_petal:

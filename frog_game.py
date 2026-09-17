@@ -56,7 +56,7 @@ levels = {
     },
     2: {
         'lanes': [
-            {'petals': 6, 'spacing': 150, 'speed': 2, 'direction': 1, 'y_pos': 622},
+            {'petals': 6, 'spacing': 150, 'speed': 2, 'direction': -1, 'y_pos': 622},
             {'petals': 5, 'spacing': 160, 'speed': 3, 'direction': -1, 'y_pos': 455},
             {'petals': 4, 'spacing': 250, 'speed': 1.5, 'direction': 1, 'y_pos': 285},
             {'petals': 5, 'spacing': 180, 'speed': 1.25, 'direction': -1, 'y_pos': 130},
@@ -290,6 +290,36 @@ def restart_game():
             new_petal.direction = lane_config['direction']
             petal_group.add(new_petal)
 
+def restart_level():
+    global X_POSITION, Y_POSITION, game_over, run, jumping, frog_angle, GAME_STATE, current_level, LANE_COUNT
+    GAME_STATE = "RESTART"
+    X_POSITION = Initial_X
+    Y_POSITION = Initial_Y
+    jumping = False
+    frog_angle = Direction.UP.value
+    game_over = False
+    GAME_STATE = "PLAYING"
+
+    LANE_COUNT = len(levels[current_level]['lanes'])
+
+    frog.rect.center = (X_POSITION, Y_POSITION)
+    frog.jumping = False
+    frog.on_petal = False
+    frog.current_petal = None
+    current_level = current_level
+
+    LANE_COUNT = len(levels[current_level]['lanes'])
+    petal_group.empty()
+
+    for lane in range(LANE_COUNT):
+        lane_config = levels[current_level]['lanes'][lane]
+        for i in range(lane_config['petals']):
+            new_petal = Petal(lane)
+            new_petal.rect.x = i * lane_config['spacing'] + 50
+            new_petal.rect.y = lane_config['y_pos']
+            new_petal.speed = lane_config['speed']
+            new_petal.direction = lane_config['direction']
+            petal_group.add(new_petal)
 
 def level_completion():
     global X_POSITION, Y_POSITION
@@ -507,7 +537,7 @@ while run:
                 run = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    restart_game()
+                    restart_level()
                 if event.key == pygame.K_m:
                     GAME_STATE = "MENU"
                     current_level = 1

@@ -3,14 +3,18 @@ import pygame.draw
 
 from helper import *
 
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 850
+LANE_HEIGHT = 170
+
 pygame.init()
 exitgame = False
 jumping = False
 Y_GRAVITY = 1
-JUMP_HEIGHT = 20# abstand petals 10
+JUMP_HEIGHT = 4
 Y_VELOCITY = JUMP_HEIGHT
 frog_angle = 0
-JUMP_Speed = 6
+JUMP_Speed = 7
 direction = frog_angle
 
 X_POSITION, Y_POSITION = 400, 825

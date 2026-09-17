@@ -46,35 +46,35 @@ background_music_playing = False
 levels = {
     1: {  # Level 1
         'lanes': [
-            {'petals': 3, 'spacing': 150, 'speed': 2, 'direction': 1, 'y_pos': 605},
-            {'petals': 4, 'spacing': 250, 'speed': 3, 'direction': -1, 'y_pos': 475},
-            {'petals': 6, 'spacing': 150, 'speed': 3, 'direction': 1, 'y_pos': 215},
-            {'petals': 5, 'spacing': 200, 'speed': 1.75, 'direction': -1, 'y_pos': 95},
+            {'petals': 5, 'spacing': 150, 'speed': 2, 'direction': 1, 'y_pos': 622},
+            {'petals': 4, 'spacing': 200, 'speed': 1.5, 'direction': -1, 'y_pos': 455},
+            {'petals': 5, 'spacing': 170, 'speed': 2, 'direction': -1, 'y_pos': 285},
+            {'petals': 3, 'spacing': 300, 'speed': 1, 'direction': 1, 'y_pos': 120},
+            {'petals': 5, 'spacing': 200, 'speed': 1.75, 'direction': -1, 'y_pos': 8},
         ]
     },
     2: {
         'lanes': [
-            {'petals': 6, 'spacing': 150, 'speed': 2, 'direction': -1, 'y_pos': 605},
-            {'petals': 5, 'spacing': 160, 'speed': 3, 'direction': -1, 'y_pos': 475},
-            {'petals': 4, 'spacing': 170, 'speed': 5, 'direction': -1, 'y_pos': 345},
-            {'petals': 5, 'spacing': 180, 'speed': 3, 'direction': -1, 'y_pos': 215},
-            {'petals': 4, 'spacing': 290, 'speed': 1, 'direction': -1, 'y_pos': 95},
+            {'petals': 6, 'spacing': 150, 'speed': 2, 'direction': 1, 'y_pos': 622},
+            {'petals': 5, 'spacing': 160, 'speed': 3, 'direction': -1, 'y_pos': 455},
+            {'petals': 4, 'spacing': 250, 'speed': 1.5, 'direction': 1, 'y_pos': 285},
+            {'petals': 5, 'spacing': 180, 'speed': 1.25, 'direction': -1, 'y_pos': 120},
+            {'petals': 4, 'spacing': 290, 'speed': 1, 'direction': -1, 'y_pos': 8},
         ]
     },
     3: {
         'lanes': [
-            {'petals': 6, 'spacing': 150, 'speed': 2, 'direction': -1, 'y_pos': 605},
-            {'petals': 5, 'spacing': 160, 'speed': 3, 'direction': -1, 'y_pos': 475},
-            {'petals': 4, 'spacing': 170, 'speed': 5, 'direction': -1, 'y_pos': 345},
-            {'petals': 5, 'spacing': 180, 'speed': 3, 'direction': -1, 'y_pos': 215},
-            {'petals': 4, 'spacing': 290, 'speed': 1, 'direction': -1, 'y_pos': 95},
+            {'petals': 6, 'spacing': 150, 'speed': 2, 'direction': -1, 'y_pos': 622},
+            {'petals': 5, 'spacing': 190, 'speed': 1, 'direction': -1, 'y_pos': 455},
+            {'petals': 4, 'spacing': 200, 'speed': 1, 'direction': -1, 'y_pos': 285},
+            {'petals': 3, 'spacing': 200, 'speed': 1.5, 'direction': 1, 'y_pos': 120},
+            {'petals': 4, 'spacing': 290, 'speed': 1, 'direction': 1, 'y_pos': 5},
         ]
     }
 }
 
 LANE_COUNT = len(levels[current_level]['lanes'])
 Petal_Images = [
-    "media/Petal1_y.png",
     "media/Petal2_y.png",
     "media/Petal3_y.png"
 ]
@@ -92,7 +92,7 @@ class Petal(pygame.sprite.Sprite):
 
         image_choice = random.choice(Petal_Images)
         self.image = pygame.image.load(image_choice).convert_alpha()
-        self.image = pygame.transform.scale(self.image, (125, 125))
+        self.image = pygame.transform.scale(self.image, (130, 130))
         self.rect = self.image.get_rect()
         self.speed = 1.5
         self.mask = pygame.mask.from_surface(self.image, 50)
@@ -112,7 +112,6 @@ class Petal(pygame.sprite.Sprite):
             self.rect.right = self.screen_width + self.rect.width
 
     def draw_mask_debug(self, screen):
-        """Draw the mask outline for debugging"""
         if hasattr(self, 'mask') and self.mask:
             # Get the mask as a surface (white where mask exists, transparent elsewhere)
             mask_surface = self.mask.to_surface()
@@ -540,11 +539,11 @@ while run:
                     game_over = False
 
             elif (not on_petal) and (not frog.jumping) and fall_water:
-                print("Frog in water and not on petal -> game over")
+                #print("Frog in water and not on petal -> game over")
                 print(Y_POSITION)
-                print(f"frog.rect={frog.rect}, WATER_ZONE={WATER_ZONE}, fall_water={fall_water}, on_petal={bool(on_petal)}, jumping={frog.jumping}")
-                print("frog.rect=", frog.rect, "hitbox=", frog.hitbox_rect)
-                falling_water_sound.play()
+                #print(f"frog.rect={frog.rect}, WATER_ZONE={WATER_ZONE}, fall_water={fall_water}, on_petal={bool(on_petal)}, jumping={frog.jumping}")
+                #print("frog.rect=", frog.rect, "hitbox=", frog.hitbox_rect)
+                #falling_water_sound.play()
                 game_over = True
 
         if game_over:

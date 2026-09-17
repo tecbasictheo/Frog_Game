@@ -49,7 +49,7 @@ levels = {
             {'petals': 5, 'spacing': 150, 'speed': 2, 'direction': 1, 'y_pos': 622},
             {'petals': 4, 'spacing': 200, 'speed': 1.5, 'direction': -1, 'y_pos': 455},
             {'petals': 5, 'spacing': 170, 'speed': 2, 'direction': -1, 'y_pos': 285},
-            {'petals': 3, 'spacing': 300, 'speed': 1, 'direction': 1, 'y_pos': 120},
+            {'petals': 3, 'spacing': 300, 'speed': 1, 'direction': 1, 'y_pos': 130},
             {'petals': 5, 'spacing': 200, 'speed': 1.75, 'direction': -1, 'y_pos': 8},
         ]
     },
@@ -58,7 +58,7 @@ levels = {
             {'petals': 6, 'spacing': 150, 'speed': 2, 'direction': 1, 'y_pos': 622},
             {'petals': 5, 'spacing': 160, 'speed': 3, 'direction': -1, 'y_pos': 455},
             {'petals': 4, 'spacing': 250, 'speed': 1.5, 'direction': 1, 'y_pos': 285},
-            {'petals': 5, 'spacing': 180, 'speed': 1.25, 'direction': -1, 'y_pos': 120},
+            {'petals': 5, 'spacing': 180, 'speed': 1.25, 'direction': -1, 'y_pos': 130},
             {'petals': 4, 'spacing': 290, 'speed': 1, 'direction': -1, 'y_pos': 8},
         ]
     },
@@ -67,7 +67,7 @@ levels = {
             {'petals': 6, 'spacing': 150, 'speed': 2, 'direction': -1, 'y_pos': 622},
             {'petals': 5, 'spacing': 190, 'speed': 1, 'direction': -1, 'y_pos': 455},
             {'petals': 4, 'spacing': 200, 'speed': 1, 'direction': -1, 'y_pos': 285},
-            {'petals': 3, 'spacing': 200, 'speed': 1.5, 'direction': 1, 'y_pos': 120},
+            {'petals': 3, 'spacing': 200, 'speed': 1.5, 'direction': 1, 'y_pos': 130},
             {'petals': 4, 'spacing': 290, 'speed': 1, 'direction': 1, 'y_pos': 5},
         ]
     }
@@ -75,6 +75,7 @@ levels = {
 
 LANE_COUNT = len(levels[current_level]['lanes'])
 Petal_Images = [
+    "media/Petal1_y.png",
     "media/Petal2_y.png",
     "media/Petal3_y.png"
 ]
@@ -110,14 +111,6 @@ class Petal(pygame.sprite.Sprite):
             self.rect.left = -self.rect.width
         else:
             self.rect.right = self.screen_width + self.rect.width
-
-    def draw_mask_debug(self, screen):
-        if hasattr(self, 'mask') and self.mask:
-            # Get the mask as a surface (white where mask exists, transparent elsewhere)
-            mask_surface = self.mask.to_surface()
-            # Draw it at the frog's position
-            screen.blit(mask_surface, self.rect.topleft)
-
 
 class PetalSpawner:
     def __init__(self, screen_width):
@@ -159,7 +152,6 @@ class PetalSpawner:
         self.petals.append(petal)
         self.spawn_delay
 
-
 class Start():
     def __init__(self):
         self.image = pygame.image.load("media/Petal2_y.png").convert_alpha()
@@ -174,13 +166,10 @@ class Start():
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
-        #Screen.blit(self.mask, self.rect)
-
 
 def load_level(level_number):
     level_data = levels[level_number]
     return level_data['lanes']
-
 
 def render_mainmenu():
     global frog_rotation_angle
@@ -310,7 +299,6 @@ def level_completion():
 
 
 def handle_collision(frog, petal_group):
-        # Check for collision with any petal using mask collision
         collided_petal = pygame.sprite.spritecollideany(frog, petal_group, pygame.sprite.collide_mask)
 
         if collided_petal and not frog.on_petal:
@@ -318,7 +306,7 @@ def handle_collision(frog, petal_group):
             frog.on_petal = True
             frog.current_petal = collided_petal
             frog.jumping = False
-            frog.update_image()  # sitting image
+            frog.update_image()
 
             global X_POSITION, Y_POSITION
             X_POSITION = frog.rect.centerx
@@ -328,20 +316,6 @@ def handle_collision(frog, petal_group):
             return True
 
         return False
-
-def jump_frog(frog, X_POSITION, Y_POSITION):
-    if frog.on_petal:
-        X_POSITION = frog.rect.centerx
-        Y_POSITION = frog.rect.centery
-        frog.on_petal = False
-        frog.current_petal = None
-
-def draw_mask(surface, sprite, color=(0, 255, 0)):
-    mask_outline = sprite.mask.outline()
-    if mask_outline:
-        # Shift points to match sprite position
-        points = [(x + sprite.rect.x, y + sprite.rect.y) for x, y in mask_outline]
-        pygame.draw.polygon(surface, color, points, 2)  # Thicker line for visibility
 
 lane_configs = load_level(current_level)
 start = Start()
@@ -360,7 +334,7 @@ for lane in range(LANE_COUNT):
         new_petal.speed = lane_config['speed']
         new_petal.direction = lane_config['direction']
         petal_group.add(new_petal)
-_last_mask_real = None
+
 GAME_STATE = "MENU"
 main_menu()
 background_music.play(-1)
@@ -406,8 +380,6 @@ while run:
                     game_over = False
                     water_sound_playing = False
 
-        #pygame.display.flip()
-        #continue
     elif GAME_STATE == "PLAYING":
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -416,11 +388,9 @@ while run:
                 if event.key == pygame.K_SPACE:
                     if not jumping:
                                 if frog.on_petal:
-                                    # Jumping from a petal
                                     frog.on_petal = False
                                     frog.current_petal = None
-                                    # Position frog slightly above the petal for the jump
-                                    frog.rect.y -= 50
+                                    frog.rect.y -= 25 #pos above petal
                                     Y_POSITION = frog.rect.centery
                                 jumping = True
                                 frog.jumping = True
@@ -453,7 +423,7 @@ while run:
                 frog_angle -= 2
 
             if jumping:
-                angle_rad = math.radians(270 - frog_angle)  # convert angle to radians
+                angle_rad = math.radians(270 - frog_angle)
                 dx = math.cos(angle_rad) * JUMP_Speed
                 dy = math.sin(angle_rad) * JUMP_Speed
                 X_POSITION += dx
@@ -483,7 +453,6 @@ while run:
                     frog.update_hitbox()
 
             frog.update_image()
-            #screen.blit(bg,(0,0))
             screen.fill(BACKGROUND_COLOR)
             spawner.update(dt)
 
@@ -496,22 +465,6 @@ while run:
             frog.update_hitbox()
             on_petal = pygame.sprite.spritecollideany(frog, petal_group, pygame.sprite.collide_mask)
             fall_water = frog.rect.colliderect(WATER_ZONE)
-
-            '''if hasattr(frog, "mask") and frog.mask is not None:
-                mask_real = (frog.mask.count() > 0)
-            else:
-                mask_real = False
-
-            if mask_real != _last_mask_real:
-                print(
-                    f"[mask debug] frog.mask.count() = {frog.mask.count() if hasattr(frog, 'mask') and frog.mask is not None else 'None'} -> real = {mask_real}")
-                _last_mask_real = mask_real'''
-
-            '''for petal in spawner.petals:
-                screen.blit(petal.image, petal.rect)
-            for petal in petal_group:
-                petal.mask = pygame.mask.from_surface(petal.image)
-            #pygame.draw.rect(screen, (0, 100, 255), WATER_ZONE)'''
 
             BOTTOM_BOUNDARY = 50
             if Y_POSITION > (SCREEN_HEIGHT) - BOTTOM_BOUNDARY:
@@ -539,11 +492,7 @@ while run:
                     game_over = False
 
             elif (not on_petal) and (not frog.jumping) and fall_water:
-                #print("Frog in water and not on petal -> game over")
-                print(Y_POSITION)
-                #print(f"frog.rect={frog.rect}, WATER_ZONE={WATER_ZONE}, fall_water={fall_water}, on_petal={bool(on_petal)}, jumping={frog.jumping}")
-                #print("frog.rect=", frog.rect, "hitbox=", frog.hitbox_rect)
-                #falling_water_sound.play()
+                falling_water_sound.play()
                 game_over = True
 
         if game_over:
@@ -561,7 +510,7 @@ while run:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     restart_game()
-                if event.key == pygame.K_m: #does not work
+                if event.key == pygame.K_m:
                     GAME_STATE = "MENU"
                     current_level = 1
                     LANE_COUNT = len(levels[current_level]['lanes'])
@@ -571,9 +520,6 @@ while run:
                     jumping = False
                     frog.jumping = False
                     game_over = False
-
-    '''for petal in petal_group:
-        draw_mask(screen, petal, (255, 0, 0))'''
 
 
     pygame.display.flip()

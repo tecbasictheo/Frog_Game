@@ -1,5 +1,5 @@
+# constants and imports
 import time
-
 import pygame
 
 pygame.init()
@@ -22,8 +22,6 @@ run = True
 jumping = False
 game_over = False
 GAME_STATE = "MENU"
-restart_button = None
-main_menu_button = None
 clock = pygame.time.Clock()
 pygame.display.set_caption("Frog Game")
 BACKGROUND_COLOR = "light blue"
@@ -44,6 +42,7 @@ background_music = pygame.mixer.Sound("media/music.wav")
 water_sound_playing = False
 background_music_playing = False
 
+#level setup
 levels = {
     1: {  # Level 1
         'lanes': [
@@ -73,19 +72,20 @@ levels = {
         ]
     }
 }
-
 LANE_COUNT = len(levels[current_level]['lanes'])
-Petal_Images = [
-    "media/Petal1_y.png",
-    "media/Petal2_y.png",
-    "media/Petal3_y.png"
-]
 
+# frog direction setup
 class Direction(Enum):
     UP = 0
     DOWN = 180
     LEFT = 270
     RIGHT = 90
+# petals: setup, classes
+Petal_Images = [
+    "media/Petal1_y.png",
+    "media/Petal2_y.png",
+    "media/Petal3_y.png"
+]
 
 class Petal(pygame.sprite.Sprite):
 
@@ -128,7 +128,7 @@ class PetalSpawner:
 
             if self.count < self.max_count:
                 self.timer += delta_time
-                if (petal.rect.right < 0 or petal.rect.left > self.screen_width):
+                if petal.rect.right < 0 or petal.rect.left > self.screen_width:
                     self.petals.remove(petal)
                     self.spawn_petal(petal.lane)
 
@@ -153,6 +153,7 @@ class PetalSpawner:
         self.petals.append(petal)
         self.spawn_delay
 
+#startpoint class
 class Start():
     def __init__(self):
         self.image = pygame.image.load("media/Petal2_y.png").convert_alpha()
@@ -168,6 +169,7 @@ class Start():
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
+# all functions for the Game
 def load_level(level_number):
     level_data = levels[level_number]
     return level_data['lanes']
@@ -328,7 +330,6 @@ def level_completion():
         return True
     return False
 
-
 def handle_collision(frog, petal_group):
         collided_petal = pygame.sprite.spritecollideany(frog, petal_group, pygame.sprite.collide_mask)
 
@@ -345,7 +346,7 @@ def handle_collision(frog, petal_group):
             return True
 
         return False
-
+# setup before game loop
 lane_configs = load_level(current_level)
 start = Start()
 spawner = PetalSpawner(SCREEN_WIDTH)
@@ -368,6 +369,7 @@ GAME_STATE = "MENU"
 main_menu()
 background_music.play(-1)
 background_music_playing = True
+# Game loop
 while run:
     dt = clock.tick(60) / 1000.0
     if GAME_STATE == "MENU":
@@ -461,25 +463,25 @@ while run:
 
                 frog.rect.center = (X_POSITION, Y_POSITION)
                 frog.angle = frog_angle
-                frog.update_hitbox()
+                frog.update()
 
                 if Y_VELOCITY < -JUMP_HEIGHT:
                     jumping = False
                     Y_VELOCITY = JUMP_HEIGHT
                     frog.jumping = False
                     frog.update_image()
-                    frog.update_hitbox()
+                    frog.update()
             else:
                 frog.rect.center = (X_POSITION, Y_POSITION)
                 frog.angle = frog_angle
-                frog.update_hitbox()
+                frog.update()
 
             if not jumping and frog.on_petal and frog.current_petal:
                     frog.rect.x = frog.current_petal.rect.x
                     frog.rect.y = frog.current_petal.rect.y
                     X_POSITION = frog.rect.centerx
                     Y_POSITION = frog.rect.centery
-                    frog.update_hitbox()
+                    frog.update()
 
             frog.update_image()
             screen.fill(BACKGROUND_COLOR)
@@ -491,13 +493,13 @@ while run:
             start.draw(screen)
             frog.draw(screen)
             frog_group.update()
-            frog.update_hitbox()
+            frog.update()
             on_petal = pygame.sprite.spritecollideany(frog, petal_group, pygame.sprite.collide_mask)
             fall_water = frog.rect.colliderect(WATER_ZONE)
 
             BOTTOM_BOUNDARY = 50
-            if Y_POSITION > (SCREEN_HEIGHT) - BOTTOM_BOUNDARY:
-                Y_POSITION = ((SCREEN_HEIGHT) - BOTTOM_BOUNDARY)
+            if Y_POSITION > SCREEN_HEIGHT - BOTTOM_BOUNDARY:
+                Y_POSITION = (SCREEN_HEIGHT - BOTTOM_BOUNDARY)
 
             if SCREEN_WIDTH + 20 < X_POSITION or X_POSITION < 0 -20:
                 game_over = True
@@ -516,7 +518,7 @@ while run:
                 else:
                     X_POSITION = Initial_X
                     Y_POSITION = Initial_Y
-                    frog.update_hitbox()
+                    frog.update()
                     game_over = False
 
             elif (not on_petal) and (not frog.jumping) and fall_water:

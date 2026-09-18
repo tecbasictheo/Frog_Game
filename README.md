@@ -1,5 +1,7 @@
 # $\color{green}\Huge{Frogger}$
 
+
+AI was used for debugging purposes.\
 #### $\color{green}\Huge{Photos:}$
 <img width="225" height="250" alt="Photo Mainmenu" src="https://github.com/user-attachments/assets/41825e71-3630-4097-b750-615c4d9c2f6e"/>
 <img width="225" height="250" alt="Photo Gameplay" src="https://github.com/user-attachments/assets/c60fcc7d-3622-4710-b459-c12c709c41cb"/>

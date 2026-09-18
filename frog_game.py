@@ -206,8 +206,8 @@ def advance_level(screen):
     global current_level, petal_group, LANE_COUNT, jumping, frog_angle, GAME_STATE, game_over
     current_level += 1
     if current_level > len(levels):
-        font = pygame.font.SysFont('Times New Roman', 50)
-        text_surface = font.render("You WIN!", True, (0, 0, 0))
+        font = pygame.font.SysFont('Times New Roman', 45)
+        text_surface = font.render("You win!", True, (0, 0, 0))
         text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
         screen.blit(text_surface, text_rect)
         pygame.display.update()
@@ -233,8 +233,8 @@ def advance_level(screen):
             petal_group.add(new_petal)
 
     if current_level != 1:
-        font = pygame.font.SysFont('Times New Roman', 50)
-        text_surface = font.render("Level UP!", True, (0, 0, 0))
+        font = pygame.font.SysFont('Times New Roman', 45)
+        text_surface = font.render("Level up!", True, (0, 0, 0))
         text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
         screen.blit(text_surface, text_rect)
         jumping = False

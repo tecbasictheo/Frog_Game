@@ -28,7 +28,7 @@ Frog_j = pygame.transform.scale(Jumping_f, (w_2 * 0.45, h_2 * 0.45))
 frog_jump = Frog_s.get_rect(center=(X_POSITION, Y_POSITION))
 rotated_frog = pygame.transform.rotate(Frog_j, frog_angle)
 
-
+#Frog class with petal-attach and -detach methods and creation of frog.hitbox
 class Frog(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
@@ -87,7 +87,7 @@ class Frog(pygame.sprite.Sprite):
     def update_hitbox(self):
         self.hitbox_rect = self.rect.inflate(-int(self.rect.width * 0.75), -int(self.rect.height * 0.75))
 
-    def draw(self, Screen):
+    def draw(self, Screen): #Screen works here as placeholder, will be overwritten in main file
         rotated_image = pygame.transform.rotate(self.image, self.angle)
         rotated_rect = rotated_image.get_rect(center=self.rect.center)
         Screen.blit(rotated_image, rotated_rect)

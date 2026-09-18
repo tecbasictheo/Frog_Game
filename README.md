@@ -1,11 +1,9 @@
 # Frogger
 
 ### Photos: 
-<img width="791" height="831" alt="Photo Mainmenu" src="https://github.com/user-attachments/assets/41825e71-3630-4097-b750-615c4d9c2f6e" width="200" height="200"/>
-<img width="789" height="843" alt="Photo Gameplay" src="https://github.com/user-attachments/assets/94f722b9-54a1-4be9-b300-77f3227da085" width="200" height="200"/>
-<img width="789" height="843" alt="Photo Gameplay" src="https://github.com/user-attachments/assets/c60fcc7d-3622-4710-b459-c12c709c41cb" width="200" height="200"
-<img width="788" height="831" alt="Photo  You died  screen" src="https://github.com/user-attachments/assets/b5a6e13e-cc71-4329-81e3-3cb9df7bd325" />
-width="200" height="200"/>
+<img width="791" height="831" alt="Photo Mainmenu" src="https://github.com/user-attachments/assets/41825e71-3630-4097-b750-615c4d9c2f6e" width="50" height="70"/>
+<img width="789" height="843" alt="Photo Gameplay" src="https://github.com/user-attachments/assets/c60fcc7d-3622-4710-b459-c12c709c41cb" width="50" height="70"/>
+<img width="788" height="831" alt="Photo  You died  screen" src="https://github.com/user-attachments/assets/b5a6e13e-cc71-4329-81e3-3cb9df7bd325" width="50" height="70"/>
 
 ### Sound Credits: 
 Music by muri_kuri: [ukulele loop.wav](https://freesound.org/people/muri_kuri/sounds/682461/)\

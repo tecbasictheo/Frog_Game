@@ -1,4 +1,4 @@
-# $\color{green}\Huge{textsf{Frogger}}$
+# $\color{green}\Huge{Frogger}$
 
 ### $\color{green}\Huge{Photos:}$
 <img width="225" height="250" alt="Photo Mainmenu" src="https://github.com/user-attachments/assets/41825e71-3630-4097-b750-615c4d9c2f6e"/>
@@ -24,7 +24,7 @@ import pygame.draw
 ```
 
 ### $\color{green}\Huge{Usage:}$
-Start the game with following in your terminal:\
+Start the game with following in your terminal:
 ```
 python frog_game.py
 ```

@@ -1,13 +1,13 @@
 import pygame.draw
-pygame.init()
-exitgame = False
-jumping = False
 
-Y_GRAVITY = 1
+pygame.init()
+
+jumping = False
 JUMP_HEIGHT = 4
-Y_VELOCITY = JUMP_HEIGHT
-frog_angle = 0
 JUMP_Speed = 7
+Y_VELOCITY = JUMP_HEIGHT
+Y_GRAVITY = 1
+frog_angle = 0
 direction = frog_angle
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 850
@@ -82,9 +82,6 @@ class Frog(pygame.sprite.Sprite):
                 self.mask = pygame.mask.Mask((1, 1), False)
 
     def update(self):
-            self.update_hitbox()
-
-    def update_hitbox(self):
         self.hitbox_rect = self.rect.inflate(-int(self.rect.width * 0.75), -int(self.rect.height * 0.75))
 
     def draw(self, Screen): #Screen works here as placeholder, will be overwritten in main file

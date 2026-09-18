@@ -13,7 +13,8 @@ Sounds from freesound.org: [water_flows_through_crack_in_rocks.wav](https://free
 
 ## Usage: 
 Start the game with following in your terminal:\
-`python frog_game.py`\
+`python frog_game.py\`
+
 Make sure you have access to all files, including the media folder! 
 
 ## Structur: 

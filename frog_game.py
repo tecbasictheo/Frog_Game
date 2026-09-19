@@ -113,46 +113,6 @@ class Petal(pygame.sprite.Sprite):
         else:
             self.rect.right = self.screen_width + self.rect.width
 
-class PetalSpawner:
-    def __init__(self, screen_width):
-        self.petals = []
-        self.screen_width = screen_width
-        self.max_count = 10
-        self.count = 0
-        self.spawn_delay = 1
-        self.timer = 0
-
-    def update(self, delta_time):
-        for petal in self.petals[:]:
-            petal.update(delta_time)
-
-            if self.count < self.max_count:
-                self.timer += delta_time
-                if petal.rect.right < 0 or petal.rect.left > self.screen_width:
-                    self.petals.remove(petal)
-                    self.spawn_petal(petal.lane)
-
-                if self.timer > self.spawn_delay:
-                    for lane in range(LANE_COUNT):
-                        current_count = len([p for p in self.petals if p.lane == lane])
-                        if current_count < self.petals_per_lane[lane]:
-                            petal = Petal(lane)
-                            self.petals.append(petal)
-                            self.count += 1
-                    if self.count == self.max_count // 2:
-                        self.spawn_delay = 2
-                        self.timer = 0
-
-    def draw(self):
-        for petal in self.petals:
-            petal.draw()
-
-    def spawn_petal(self, lane, lane_config):
-        lane_config = self.get_lane_config(lane)
-        petal = Petal(lane, self.screen_width)
-        self.petals.append(petal)
-        self.spawn_delay
-
 #startpoint class
 class Start():
     def __init__(self):
@@ -168,6 +128,15 @@ class Start():
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
+        screen.blit(self.image, (600,730))
+        screen.blit(self.image, (100,720))
+        self.image_u = pygame.transform.rotate(self.image, 10)
+        screen.blit(self.image_u, (211, 740)) #starter point ->  try out
+        screen.blit(self.image_u, (-35, 720)) #starter point ->  try out
+        self.image_o = pygame.transform.rotate(self.image, 190)
+        screen.blit(self.image_o, (460, 732))
+        screen.blit(self.image_o, (710, 735))
+
 
 # all functions for the Game
 def load_level(level_number):
@@ -349,7 +318,6 @@ def handle_collision(frog, petal_group):
 # setup before game loop
 lane_configs = load_level(current_level)
 start = Start()
-spawner = PetalSpawner(SCREEN_WIDTH)
 frog_group = pygame.sprite.Group()
 frog = Frog(Initial_X, 730)
 petal_group = pygame.sprite.Group()
@@ -485,8 +453,6 @@ while run:
 
             frog.update_image()
             screen.fill(BACKGROUND_COLOR)
-            spawner.update(dt)
-
             petal_group.update()
             petal_group.draw(screen)
             frog_group.update()

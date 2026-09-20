@@ -22,7 +22,7 @@ It started with my presentation: [FrogGame.pdf](https://github.com/user-attachme
 <img width="200" height="120" alt="8" src="https://github.com/user-attachments/assets/515c2f2b-1b8b-4c4d-abc9-a6dea68c88f9" />
 <img width="200" height="120" alt="9" src="https://github.com/user-attachments/assets/81192a56-c4da-4bdb-bcb3-e1e939bb95f0" />
 <img width="200" height="120" alt="10" src="https://github.com/user-attachments/assets/0a80a366-458e-43bb-b00f-5276188333fc" />
-<img width="200" height="120" alt="11" src="https://github.com/user-attachments/assets/f6d0bc8c-6141-4cc5-88a6-dc044527a06c" />\
+<img width="200" height="120" alt="11" src="https://github.com/user-attachments/assets/f6d0bc8c-6141-4cc5-88a6-dc044527a06c" />
 
 - The main-screen code was completely disregarded and overhauled. 
 - And my game design simplified alot as I was coding the game, as it needed to fit what I could realistically create. 

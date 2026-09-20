@@ -19,9 +19,8 @@ Sounds from freesound.org: [water_flows_through_crack_in_rocks.wav](https://free
 
 ---
 ### $\color{green}\Huge{Installation:}$
-For Installation clone the repository and install this:
+For Installation clone the repository and import:
 ```
-pip install -r requirements.txt
 import pygame
 from enum import Enum
 import math

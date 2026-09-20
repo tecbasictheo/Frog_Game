@@ -1,9 +1,9 @@
 # $\color{green}\Huge{Frogger}$
 
-This game is a simple Frogger, with a simple game mechanic coded in python. \ 
+This game is a simple Frogger, with a simple game mechanic coded in python.\ 
 To beat each level the frog needs to get to the top of the screen. Jumping from petal to petal, without falling into the water or leaving the screen.\
 The game was modeled after the original frogger arcarde game and the mobil game Crossy Road. 
-The frog and the petals are painted with water colour, then scanned and finally with python animated. \
+The frog and the petals are painted with water colour, then scanned and finally with python animated.\
 
 AI was used for debugging purposes.\
 #### $\color{green}\Huge{Photos:}$
@@ -44,7 +44,7 @@ Make sure you have access to all files, including the media folder!
 `LICENSE` <- Keeping it legal\
 `README.md` <- You are here.\
 `frog.py` <- This holds the frog class and all needed constants for it.\
-`python frog_game.py` <- This holds the main game function and the gameloop. \
+`python frog_game.py` <- This holds the main game function and the gameloop.
 
 
 

@@ -1,4 +1,4 @@
-# $\color{green}\Huge{Frogger}$
+# $\color{green}\Huge{Frogger}$ 🐸
 
 This game is a simple Frogger, with a simple game mechanic coded in python.\
 To beat each level the frog needs to get to the top of the screen. The frog can achive this by jumping from petal to petal,\

@@ -22,7 +22,7 @@ It started with my presentation: [FrogGame.pdf](https://github.com/user-attachme
 <img width="200" height="120" alt="8" src="https://github.com/user-attachments/assets/515c2f2b-1b8b-4c4d-abc9-a6dea68c88f9" />
 <img width="200" height="120" alt="9" src="https://github.com/user-attachments/assets/81192a56-c4da-4bdb-bcb3-e1e939bb95f0" />
 <img width="200" height="120" alt="10" src="https://github.com/user-attachments/assets/0a80a366-458e-43bb-b00f-5276188333fc" />
-<img width="200" height="120" alt="11" src="https://github.com/user-attachments/assets/f6d0bc8c-6141-4cc5-88a6-dc044527a06c" />
+<img width="200" height="120" alt="11" src="https://github.com/user-attachments/assets/f6d0bc8c-6141-4cc5-88a6-dc044527a06c" />\
 
 - The main-screen code was completely disregarded and overhauled. 
 - And my game design simplified alot as I was coding the game, as it needed to fit what I could realistically create. 
@@ -42,13 +42,25 @@ The hardest in the entire project was the process of debugging. This is also wha
 Because of this, I refuse to change the structure of my code, as it is working and I will not challenge this again.\
 As frustrating as creating the game ”FROGGER” was, it was also really rewarding and enjoyed most of the process. 
 
-Here a few highlights of the process:
+Here a few of my highlights of the process (mostly debugging):
 
 <img width="200" height="100" alt="tempImagePlNZEy" src="https://github.com/user-attachments/assets/6c0a83c3-6847-43c9-9317-5c4a1bdf84c7" />
 <img width="200" height="100" alt="Process" src="https://github.com/user-attachments/assets/10d0639c-4fe8-4b1f-971d-a04467b63452" />
 
 Videos:\
 [Main screen lacking](https://github.com/user-attachments/assets/2369978a-79cd-4915-ad37-7f2b74b4b258) and [Frog jumping](https://github.com/user-attachments/assets/03934f93-05c7-411d-bd61-46863777e4a3)
+
+#### $\color{green}\Huge{Challenges:}$
+
+I had the most difficulties with the attach function. The one that made it possible for my frog to land on the petal and then move with it. The most difficulties came from a bug with my mask, as the hand painting and animation of the frog made the frog have two diffrent sizes and positions. I could adjust it visually for the player, but it did not change the dimentions. This affected the position calculations and basiclly could hinder the entire game. 
+As solution I used a hitbox instead of the mask. It uses the mask as reference, but it was easier to adjust and with it I could remove the problem of the see-through parts of the images.\
+This connects to another challenge, I had some struggles with making my paintings usable for the game. With removing the background, sizing and etc. I did not expect it  taking up the amount of time it needed. However, it was really rewarding to see how it transformed, from being on paper, to my screen and moving there. 
+
+#### $\color{green}\Huge{Outlook:}$
+
+To further develop the game I would like to create a "level" page, where the player can create their own level. For it the levels-list could be used, combined with user inputs. There the player can adjust speed, direction, number of petals, ...
+
+It would definitely enhance the game experience, but it is at the moment above my skill level. ://
 
 
 

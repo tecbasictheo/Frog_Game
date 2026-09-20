@@ -1,7 +1,7 @@
 # $\color{green}\Huge{Frogger}$ 🐸
 
 This game is a simple Frogger, with a simple game mechanic coded in python.\
-To beat each level the frog needs to get to the top of the screen. The frog can achive this by jumping from petal to petal,\
+To beat each level the frog needs to get to the top of the screen. The frog can achive this by jumping from petal to petal,
 without falling into the water or leaving the screen.\
 The game was modeled after the mobil game Crossy Road and is build similar to the the original frogger arcarde game.\
 The frog and the petals are painted with water colour, then scanned and finally with python animated.

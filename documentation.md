@@ -1,8 +1,8 @@
 # $\color{green}\Huge{Documentation}$
 
 My idea just started with my liking of the game "Crossy Road" and then asking myself if I could do it.\
-Beforehand. I did not know the original frogger, the arcade game. I found it while coding, as I was looking up YouTube tutorials. Unintentional, my game is quite similar to the original. This is why I gave my game the same name.\
-I did not even steal the idea of using a frog character, I thought I was being original.
+Beforehand, I did not know the original frogger, the arcade game. I found it while coding, as I was looking up YouTube tutorials. Unintentional, my game is quite similar to the original. This is why my game has the same name.\
+I did not even steal the idea of the frog character, I thought I was being original.
 
 
 

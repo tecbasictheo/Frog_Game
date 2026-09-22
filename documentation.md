@@ -63,18 +63,19 @@ To further develop the game I would like to create a "level" page, where the pla
 It would definitely enhance the game experience, but it is at the moment above my skill level. ://
 
 #### $\color{green}\Huge{Sources:}$
-- some of my many sources:
-https://youtu.be/8OMghdHP-zs
-https://youtu.be/ST-Qq3WBZBE
-https://youtu.be/BHr9jxKithk
-https://youtu.be/tJiKYMQJnYg
-https://youtu.be/BHr9jxKithk
-https://youtu.be/ST-Qq3WBZBE
-https://youtu.be/sfniTyS9yHo
-https://youtu.be/Xzmpl5tnJnc
-https://youtu.be/3Yhhzflmxfs
-https://youtu.be/_FpkqIkeKUY
-https://www.pygame.org/docs/
+
+These are some of my many sources:
+- https://youtu.be/8OMghdHP-zs
+- https://youtu.be/ST-Qq3WBZBE
+- https://youtu.be/BHr9jxKithk
+- https://youtu.be/tJiKYMQJnYg
+- https://youtu.be/BHr9jxKithk
+- https://youtu.be/ST-Qq3WBZBE
+- https://youtu.be/sfniTyS9yHo
+- https://youtu.be/Xzmpl5tnJnc
+- https://youtu.be/3Yhhzflmxfs
+- https://youtu.be/_FpkqIkeKUY
+- https://www.pygame.org/docs/
 
 
 
